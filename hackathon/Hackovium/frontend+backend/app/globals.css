@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-retro-black: #0a0a0c;
+  --color-retro-purple: #b026ff;
+  --color-retro-purple-dark: #7000cc;
+  --color-retro-green: #39ff14;
+  --color-retro-red: #ff003c;
+  --font-vt323: var(--font-vt323), monospace;
+}
+
+@layer utilities {
+  .pixel-shadow {
+    box-shadow: 4px 4px 0px var(--color-retro-purple-dark);
+  }
+  .pixel-shadow-green {
+    box-shadow: 4px 4px 0px var(--color-retro-green);
+  }
+  .pixel-shadow-red {
+    box-shadow: 4px 4px 0px var(--color-retro-red);
+  }
+  .pixel-shadow-hover:hover {
+    box-shadow: 2px 2px 0px var(--color-retro-purple-dark);
+    transform: translate(2px, 2px);
+  }
+  .pixel-shadow-green-hover:hover {
+    box-shadow: 2px 2px 0px var(--color-retro-green);
+    transform: translate(2px, 2px);
+  }
+  .pixel-shadow-red-hover:hover {
+    box-shadow: 2px 2px 0px var(--color-retro-red);
+    transform: translate(2px, 2px);
+  }
+  .pixel-border {
+    border: 2px solid var(--color-retro-purple);
+  }
+  .pixel-border-green {
+    border: 2px solid var(--color-retro-green);
+  }
+  .pixel-border-red {
+    border: 2px solid var(--color-retro-red);
+  }
+  
+  .glitch-text {
+    position: relative;
+  }
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .glitch-text::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--color-retro-red);
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+  }
+  .glitch-text::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--color-retro-green);
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+  }
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(10px, 9999px, 80px, 0); }
+  20% { clip: rect(40px, 9999px, 10px, 0); }
+  40% { clip: rect(80px, 9999px, 40px, 0); }
+  60% { clip: rect(20px, 9999px, 90px, 0); }
+  80% { clip: rect(90px, 9999px, 20px, 0); }
+  100% { clip: rect(30px, 9999px, 70px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(60px, 9999px, 10px, 0); }
+  20% { clip: rect(10px, 9999px, 80px, 0); }
+  40% { clip: rect(90px, 9999px, 30px, 0); }
+  60% { clip: rect(30px, 9999px, 90px, 0); }
+  80% { clip: rect(80px, 9999px, 40px, 0); }
+  100% { clip: rect(20px, 9999px, 60px, 0); }
+}
+
+body {
+  background-color: var(--color-retro-black);
+  color: white;
+}
+
+/* Custom scrollbar for pixel look */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-retro-black);
+  border-left: 2px solid var(--color-retro-purple-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-retro-purple);
+  border: 2px solid var(--color-retro-black);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-retro-green);
+}
