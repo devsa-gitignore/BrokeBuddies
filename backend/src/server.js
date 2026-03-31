@@ -36,6 +36,10 @@ app.use((req, res, next) => {
 });
 
 // ──────────────── Routes ────────────────
+app.get("/api", (req, res) => {
+  res.json({ status: "ok", message: "Hackfire API is running" });
+});
+
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/sms", require("./routes/smsRoutes"));

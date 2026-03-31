@@ -27,6 +27,10 @@ const teamSchema = mongoose.Schema(
       required: true
     },
     selectedDomain: { type: String },
+    foodPreference: {
+      type: String,
+      enum: ['veg', 'non-veg', 'jain'],
+    },
   },
   {
     timestamps: true,

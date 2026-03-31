@@ -9,7 +9,14 @@ const {
     refreshToken
 } = require('../controllers/authController');
 
-router.post('/register', register);
+router
+    .route('/register')
+    .post(register)
+    .all((req, res) => {
+        res.status(405).json({
+            message: 'Method Not Allowed. Use POST /api/auth/register',
+        });
+    });
 router.post('/login', login);
 router.post('/verify-otp', verifyOTP);
 router.post('/resend-otp', resendOTP);

@@ -29,7 +29,7 @@ const generateUniqueTeamCode = async () => {
 // @access  Private (Student)
 exports.createTeam = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, foodPreference } = req.body;
     const hackathonId = req.params.id; // From hackathonRoutes :id
 
     const hackathon = await Hackathon.findById(hackathonId);
@@ -76,6 +76,7 @@ exports.createTeam = async (req, res) => {
       leader: req.user.id,
       members: [req.user.id],
       teamCode,
+      foodPreference,
     });
 
     res.status(201).json(team);

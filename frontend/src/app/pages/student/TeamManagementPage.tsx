@@ -20,6 +20,7 @@ export function TeamManagementPage() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [teamName, setTeamName] = useState('');
+  const [foodPreference, setFoodPreference] = useState('');
   const [joinCode, setJoinCode] = useState('');
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,8 +72,9 @@ export function TeamManagementPage() {
     setError('');
     setMessage('');
     try {
-      await createTeam(hackathonId, teamName.trim());
+      await createTeam(hackathonId, teamName.trim(), foodPreference);
       setTeamName('');
+      setFoodPreference('');
       setMessage('Team created successfully');
       await loadTeams();
     } catch (e) {
@@ -184,6 +186,16 @@ export function TeamManagementPage() {
                 className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white"
                 required
               />
+              <select
+                value={foodPreference}
+                onChange={(e) => setFoodPreference(e.target.value)}
+                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white"
+              >
+                <option value="">Select food preference</option>
+                <option value="veg">Vegetarian</option>
+                <option value="non-veg">Non-Vegetarian</option>
+                <option value="jain">Jain</option>
+              </select>
               <button
                 type="submit"
                 disabled={isSubmitting}

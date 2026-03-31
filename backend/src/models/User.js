@@ -23,7 +23,6 @@ const userSchema = mongoose.Schema(
     foodPreference: {
       type: String,
       enum: ['veg', 'non-veg', 'jain', 'vegan'],
-      default: 'veg',
     },
     authorizationCertificateUrl: { type: String }, // Admin registration authorization
     hackathonRoles: [

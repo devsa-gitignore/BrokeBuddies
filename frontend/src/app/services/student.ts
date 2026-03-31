@@ -1,4 +1,4 @@
-import { apiRequest } from "./api";
+import { API_BASE_URL, apiRequest } from "./api";
 import { getAccessToken } from "./auth";
 
 export interface StudentHackathon {
@@ -151,12 +151,12 @@ export async function joinTeamByCode(teamCode: string) {
   };
 }
 
-export async function createTeam(hackathonId: string, name: string) {
+export async function createTeam(hackathonId: string, name: string, foodPreference?: string) {
   const token = ensureToken();
   return apiRequest<any>(`/hackathons/${hackathonId}/teams`, {
     method: "POST",
     token,
-    body: { name },
+    body: { name, ...(foodPreference && { foodPreference }) },
   });
 }
 
@@ -238,16 +238,13 @@ export async function uploadFile(file: File, folder = "hackfire_submissions") {
   formData.append("file", file);
   formData.append("folder", folder);
 
-  const response = await fetch(
-    `${(import.meta.env.VITE_API_BASE_URL || "https://whateveridk-loc8w2.onrender.com/api").replace(/\/+$/, "")}/uploads`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
+  const response = await fetch(`${API_BASE_URL}/uploads`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+    body: formData,
+  });
 
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {

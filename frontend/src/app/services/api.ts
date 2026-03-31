@@ -1,5 +1,6 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, "") || "https://whateveridk-loc8w2.onrender.com/api";
+const rawApiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
+export const API_BASE_URL = rawApiBaseUrl.replace(/\/+$/, "");
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
