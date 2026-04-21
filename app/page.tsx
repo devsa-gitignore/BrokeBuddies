@@ -38,7 +38,7 @@ const features = [
     color: 'text-primary',
     border: 'border-2 border-primary',
     glow: 'shadow-[8px_8px_0px_0px_var(--primary)]',
-    href: '/personal/login',
+    href: '/personal/scan',
     cta: 'Go to Personal Scan',
     description:
       'Map your full digital footprint. We cross-reference your email and social handles against breach databases (HIBP), discover your public profiles across 300+ platforms via Sherlock, and surface any leaked credentials or secrets.',
@@ -50,7 +50,7 @@ const features = [
     color: 'text-chart-4',
     border: 'border-2 border-chart-4',
     glow: 'shadow-[8px_8px_0px_0px_var(--chart-4)]',
-    href: '/git/login',
+    href: '/git/scan',
     cta: 'Go to Git Scan',
     description:
       'Run Trufflehog against any public GitHub repository to detect hardcoded secrets, API keys, tokens, and credentials committed to version history — even if they were deleted from the latest commit.',
@@ -62,7 +62,7 @@ const features = [
     color: 'text-accent',
     border: 'border-2 border-accent',
     glow: 'shadow-[8px_8px_0px_0px_var(--accent)]',
-    href: '/domain/login',
+    href: '/domain/scan',
     cta: 'Go to Domain Scan',
     description:
       'Identify the weakest link across an entire organisation. Provide a company domain and ShadowSelf will enumerate all associated employee emails, run concurrent OSINT scans, and rank individuals by exposure risk.',
@@ -135,13 +135,13 @@ export default function LandingPage() {
 
           <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-6 mt-8">
             <Link
-              href="/personal/login"
+              href="/personal/scan"
               className="neo-btn-primary px-8 py-4 text-base"
             >
               Start Scanning <ArrowRight className="w-5 h-5 inline-block ml-1" />
             </Link>
             <Link
-              href="/domain/login"
+              href="/domain/scan"
               className="neo-btn px-8 py-4 text-base"
             >
               Enterprise Mode <Globe className="w-5 h-5 inline-block ml-1" />

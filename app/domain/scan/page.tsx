@@ -79,17 +79,19 @@ export default function DomainScanPage() {
 
       <header className="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
         <div className="flex items-center gap-4">
-          <Shield className="w-10 h-10 text-red-500" />
+          <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-xl">
+            <Globe className="w-8 h-8 text-orange-500" />
+          </div>
           <div>
-            <h1 className="text-2xl font-pixel uppercase tracking-widest mt-1">
-              <span className="text-red-500">SHADOW</span>SELF
+            <h1 className="text-3xl font-black tracking-tight uppercase">
+              <span className="text-orange-500">Domain</span> Discovery
             </h1>
-            <p className="text-xs text-red-500/60 font-bold uppercase tracking-widest">Insider Threat Analytics</p>
+            <p className="text-xs text-orange-500/60 font-bold uppercase tracking-widest font-mono">Insider Threat Analytics · Organization Recon</p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-[10px] text-white/40 uppercase">Domain Analysis Module v4.2</p>
-          <p className="text-sm font-bold text-white/60 tabular-nums">{new Date().toISOString().split('T')[0]}</p>
+          <p className="text-[10px] text-white/40 uppercase font-mono">Module: DOMAIN_RECON_v4.2</p>
+          <p className="text-sm font-bold text-white/60 tabular-nums font-mono">{new Date().toISOString().split('T')[0]}</p>
         </div>
       </header>
 
@@ -97,13 +99,13 @@ export default function DomainScanPage() {
         {stage === 'input' && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-20">
             <div className="w-full max-w-2xl bg-white/5 border border-white/10 p-10 rounded-2xl backdrop-blur-xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-3"><Search className="text-red-500" /> Target Domain Discovery</h2>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent" />
+              <h2 className="text-2xl font-bold mb-6 flex items-center gap-3"><Search className="text-orange-500" /> Target Domain Discovery</h2>
               <p className="text-white/60 mb-8 leading-relaxed">Enter a company domain to identify the weakest link. ShadowSelf will scrape all associated employee emails and run high-velocity OSINT scans simultaneously.</p>
               <div className="relative">
                 <input type="text" placeholder="startup.com" value={domain} onChange={(e) => setDomain(e.target.value)}
-                  className="w-full bg-black/50 border border-white/20 p-5 rounded-xl text-xl font-bold focus:outline-none focus:border-red-500/50 transition-all placeholder:text-white/20" />
-                <button onClick={startDomainScan} className="absolute right-2 top-2 bottom-2 px-8 bg-red-600 hover:bg-red-500 text-white rounded-lg font-black uppercase text-sm tracking-widest transition-all hover:scale-[1.02] active:scale-95">
+                  className="w-full bg-black/50 border border-white/20 p-5 rounded-xl text-xl font-bold focus:outline-none focus:border-orange-500/50 transition-all placeholder:text-white/20" />
+                <button onClick={startDomainScan} className="absolute right-2 top-2 bottom-2 px-8 bg-orange-600 hover:bg-orange-500 text-white rounded-lg font-black uppercase text-sm tracking-widest transition-all hover:scale-[1.02] active:scale-95">
                   Initiate Scan
                 </button>
               </div>
@@ -115,12 +117,12 @@ export default function DomainScanPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white/5 border border-white/10 p-6 rounded-xl flex items-center justify-between">
-                <div><h3 className="text-xs font-black text-red-500 uppercase mb-1">Target Identity</h3><p className="text-2xl font-black">{domain}</p></div>
+                <div><h3 className="text-xs font-black text-orange-500 uppercase mb-1">Target Identity</h3><p className="text-2xl font-black">{domain}</p></div>
                 <div className="text-right"><h3 className="text-xs font-black text-white/40 uppercase mb-1">Fleet Scanned</h3><p className="text-2xl font-black">{employees.filter(e => e.status === 'complete').length} / {employees.length}</p></div>
               </div>
               <div className="bg-black border border-white/10 rounded-xl overflow-hidden h-[500px] flex flex-col">
                 <div className="bg-white/5 p-3 flex items-center justify-between border-b border-white/10">
-                  <div className="flex gap-2"><div className="w-2 h-2 rounded-full bg-red-600" /><div className="w-2 h-2 rounded-full bg-orange-600" /><div className="w-2 h-2 rounded-full bg-green-600" /></div>
+                  <div className="flex gap-2"><div className="w-2 h-2 rounded-full bg-orange-600" /><div className="w-2 h-2 rounded-full bg-yellow-500/40" /><div className="w-2 h-2 rounded-full bg-green-600" /></div>
                   <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">OSINT_TERMINAL_RECON</span>
                 </div>
                 <div className="p-4 flex-1 overflow-y-auto space-y-2 text-sm">
@@ -134,12 +136,12 @@ export default function DomainScanPage() {
                 </div>
                 <div className="p-4 bg-white/5 border-top border-white/10">
                   <div className="flex justify-between text-[10px] font-bold uppercase mb-2"><span>Global Progress</span><span>{progress}%</span></div>
-                  <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden"><motion.div className="h-full bg-red-600" initial={{ width: 0 }} animate={{ width: `${progress}%` }} /></div>
+                  <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden"><motion.div className="h-full bg-orange-600" initial={{ width: 0 }} animate={{ width: `${progress}%` }} /></div>
                 </div>
               </div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-              <h3 className="text-sm font-black uppercase mb-6 flex items-center gap-2"><Users className="text-red-500" /> Live Feed</h3>
+              <h3 className="text-sm font-black uppercase mb-6 flex items-center gap-2"><Users className="text-orange-500" /> Live Feed</h3>
               <div className="space-y-3">
                 {employees.map((emp, i) => (
                   <div key={i} className="bg-black/40 border border-white/5 p-3 rounded-lg flex items-center justify-between">
@@ -165,8 +167,8 @@ export default function DomainScanPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {employees.sort((a, b) => b.score - a.score).map((emp, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                  className={`bg-white/5 border ${i === 0 ? 'border-red-500' : 'border-white/10'} p-6 rounded-2xl relative overflow-hidden hover:bg-white/[0.07] transition-all`}>
-                  {i === 0 && <div className="absolute top-0 right-0 bg-red-500 text-black px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl">Critical Risk</div>}
+                  className={`bg-white/5 border ${i === 0 ? 'border-orange-500' : 'border-white/10'} p-6 rounded-2xl relative overflow-hidden hover:bg-white/[0.07] transition-all`}>
+                  {i === 0 && <div className="absolute top-0 right-0 bg-orange-500 text-black px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl">Critical Risk</div>}
                   <div className="mb-6"><p className="text-[10px] text-white/40 font-bold uppercase mb-1">Target #{i + 1}</p><h3 className="text-lg font-black truncate">{emp.email}</h3></div>
                   <div className="flex items-end justify-between mb-8">
                     <div><p className="text-[10px] text-white/40 uppercase font-black mb-1">Exposure Score</p><div className="text-4xl font-black">{emp.score}</div></div>
