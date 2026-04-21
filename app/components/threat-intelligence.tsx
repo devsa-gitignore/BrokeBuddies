@@ -24,8 +24,10 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
   const [aiAnalysis, setAiAnalysis] = useState<string>('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [password, setPassword] = useState('')
-  const [mutations, setMutations] = useState<Mutation[]>([])
+  const [mutations, setMutations] = useState<any[]>([])
   const [activeTab, setActiveTab] = useState<'ai' | 'stress'>('ai')
+  const [isAiAuditing, setIsAiAuditing] = useState(false)
+  const [aiReport, setAiReport] = useState<any>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -67,6 +69,33 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
       console.error('Mutation failed')
     }
   }
+
+  const handleDeepAudit = async () => {
+    if (!password || mutations.length === 0) return
+    setIsAiAuditing(true)
+    try {
+      const response = await fetch('http://localhost:8000/analyze-password-risk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, mutations }),
+      })
+      const data = await response.json()
+      setAiReport(data)
+    } catch (error) {
+      console.error('AI Audit failed')
+    } finally {
+      setIsAiAuditing(false)
+    }
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (password && mutations.length > 0) {
+        handleDeepAudit()
+      }
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [password])
 
   useEffect(() => {
     if (activeTab === 'ai' && !aiAnalysis && !isAnalyzing) {
@@ -214,10 +243,32 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
                           </div>
                           <div className="flex justify-between border-b border-accent/10 pb-1">
                              <span className="opacity-50">Exploitability:</span>
-                             <span className="text-destructive font-bold">CRITICAL</span>
+                             <span className={isAiAuditing ? "text-muted-foreground animate-pulse" : (aiReport ? "text-primary font-bold" : (mutations.some(m => m.difficulty === 'seconds') ? "text-destructive font-bold" : "text-primary font-bold"))}>
+                                {isAiAuditing ? 'ANALYZING...' : (aiReport?.global_risk || (mutations.some(m => m.difficulty === 'seconds') ? 'CRITICAL' : 'MODERATE'))}
+                             </span>
                           </div>
                        </div>
                     </div>
+                  )}
+
+                  {password && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-4 bg-primary/5 border border-primary/20 rounded-lg text-xs"
+                    >
+                      <div className="text-primary font-bold mb-1 uppercase tracking-tighter flex items-center gap-2">
+                        {isAiAuditing ? (
+                           <div className="w-2 h-2 border border-primary border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                           <Brain size={12} />
+                        )}
+                        AI Adversary Verdict: {isAiAuditing ? 'Analyzing...' : (aiReport?.global_risk || 'Awaiting Input')}
+                      </div>
+                      <p className="text-muted-foreground italic">
+                        {isAiAuditing ? 'Consulting predictive threat models...' : (aiReport?.summary || 'The AI will automatically audit your pattern for vulnerabilities.')}
+                      </p>
+                    </motion.div>
                   )}
                 </div>
 
@@ -243,12 +294,17 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
                            </div>
                            <div className="flex items-center gap-3">
                               <span className="text-[9px] opacity-40 uppercase">{m.type}</span>
-                              <Badge 
+                                <Badge 
                                 variant={m.risk === 'High' ? 'destructive' : 'outline'} 
                                 className={`text-[8px] h-4 px-1 ${m.risk !== 'High' ? 'border-accent/30 text-accent' : ''}`}
                               >
                                 {m.difficulty}
                               </Badge>
+                              {aiReport?.evaluations?.find((e: any) => e.value === m.value) && (
+                                <Badge className="text-[8px] h-4 px-1 bg-primary/20 text-primary border-primary/30">
+                                  AI {aiReport.evaluations.find((e: any) => e.value === m.value).ai_score}%
+                                </Badge>
+                              )}
                            </div>
                          </motion.div>
                        ))}

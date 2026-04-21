@@ -16,7 +16,7 @@ from osint.trufflehog import check_trufflehog
 from osint.email_identity import lookup_email_identity
 from osint.scraper import scrape_emails_for_domain
 from osint.webhooks import send_webhook_alert
-from osint.intelligence import analyze_target_intelligence
+from osint.intelligence import analyze_target_intelligence, analyze_password_risk
 from osint.mutator import generate_password_mutations
 from osint.schemas import ScanRequest, ScanResult, ExposureScore, BreachInfo, SocialProfile, Secret
 import datetime
@@ -84,15 +84,40 @@ async def run_full_osint_scan(email: str, username: str, repo_url: str = "") -> 
     trufflehog_results = await check_trufflehog(repo_url) if repo_url else {"secrets": [], "secrets_found": 0}
 
     # Calculate Score
-    breach_count = len(hibp_results.get("breaches", []))
-    profile_count = len([p for p in all_profiles if p.get("verified")])
-    secret_count = trufflehog_results.get("secrets_found", 0)
+    # 1. Breaches (Capped at 40 pts)
+    breach_points = 0
+    for b in hibp_results.get("breaches", []):
+        bp = 2 # Base points for being in a breach
+        data_types = [d.lower() for d in b.get("breached_data", [])]
+        if any(x in data_types for x in ["passwords", "credentials", "hashes"]):
+            bp += 15
+        elif any(x in data_types for x in ["email addresses", "usernames"]):
+            bp += 2
+        if any(x in data_types for x in ["phone numbers", "physical addresses", "dates of birth"]):
+            bp += 5
+        breach_points += bp
     
-    score = 0
-    score += min(breach_count * 15, 40)
-    score += min(profile_count * 5, 30)
-    score += min(secret_count * 10, 30)
-
+    # 2. Secrets (Capped at 40 pts)
+    secret_points = 0
+    for s in trufflehog_results.get("secrets", []):
+        sev = s.get("severity", "low").lower()
+        if sev in ["high", "critical"]:
+            secret_points += 25
+        elif sev == "medium":
+            secret_points += 10
+        else:
+            secret_points += 5
+            
+    # 3. Profiles (Capped at 20 pts)
+    profile_points = 0
+    for p in all_profiles:
+        if p.get("verified"):
+            profile_points += 5
+        else:
+            profile_points += 1
+            
+    total_score = min(breach_points, 40) + min(secret_points, 40) + min(profile_points, 20)
+    
     return {
         "email": email,
         "username": username,
@@ -100,11 +125,11 @@ async def run_full_osint_scan(email: str, username: str, repo_url: str = "") -> 
         "social_profiles": all_profiles,
         "secrets": trufflehog_results.get("secrets", []),
         "exposure_score": {
-            "total_breaches": breach_count,
+            "total_breaches": len(hibp_results.get("breaches", [])),
             "total_credentials_exposed": len(hibp_results.get("credentials_exposed", [])),
             "platforms_found": len(all_profiles),
-            "secrets_found": secret_count,
-            "score": min(score, 100)
+            "secrets_found": trufflehog_results.get("secrets_found", 0),
+            "score": min(int(total_score), 100)
         },
         "timestamp": datetime.datetime.now().isoformat()
     }
@@ -210,6 +235,15 @@ async def mutate_password(request: MutateRequest):
 async def analyze_threats(scan_result: dict):
     analysis = await analyze_target_intelligence(scan_result)
     return {"analysis": analysis}
+
+class PasswordAuditRequest(BaseModel):
+    password: str
+    mutations: list
+
+@app.post("/analyze-password-risk")
+async def analyze_password_audit(request: PasswordAuditRequest):
+    analysis = await analyze_password_risk(request.password, request.mutations)
+    return analysis
 
 
 class VerifyUrlRequest(BaseModel):
