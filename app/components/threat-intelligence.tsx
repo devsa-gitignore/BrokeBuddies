@@ -20,11 +20,17 @@ interface ThreatIntelligenceProps {
 }
 
 export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
+  const [mounted, setMounted] = useState(false)
   const [aiAnalysis, setAiAnalysis] = useState<string>('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [password, setPassword] = useState('')
   const [mutations, setMutations] = useState<Mutation[]>([])
   const [activeTab, setActiveTab] = useState<'ai' | 'stress'>('ai')
+
+  useEffect(() => {
+    setMounted(true)
+    console.log('ThreatIntelligence mounted')
+  }, [])
 
   const fetchAiAnalysis = async () => {
     setIsAnalyzing(true)
@@ -67,6 +73,10 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
       fetchAiAnalysis()
     }
   }, [activeTab])
+
+  if (!mounted) {
+    return <div className="h-20 bg-primary/5 rounded-lg animate-pulse" />
+  }
 
   return (
     <div className="space-y-6">

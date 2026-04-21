@@ -44,7 +44,7 @@ async def analyze_target_intelligence(scan_data: Dict[str, Any]) -> str:
 
     try:
         response = await client.chat.completions.create(
-            model="x-ai/grok-2-1212", # Using Grok via OpenRouter
+            model="google/gemini-2.0-flash-001", # Changed to a high-availability model
             messages=[
                 {"role": "system", "content": "You are a professional security intelligence auditor."},
                 {"role": "user", "content": prompt}

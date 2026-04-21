@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { AlertCircle, CheckCircle2, Shield, ShieldCheck, ShieldAlert, ExternalLink, Brain } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { GraphVisualization } from './graph-visualization'
 import { ThreatIntelligence } from './threat-intelligence'
 
@@ -131,6 +132,29 @@ export function ResultsDashboard({
           </Card>
         </motion.div>
 
+        {/* Intelligence Hub Section */}
+        <motion.div variants={itemVariants} className="mb-8 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Brain className="text-primary" size={20} />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Intelligence Hub</h2>
+            <Badge variant="outline" className="border-primary/20 text-primary uppercase text-[10px] tracking-widest">
+              AI-Powered
+            </Badge>
+          </div>
+          <ThreatIntelligence 
+            scanData={{ 
+              email, 
+              username, 
+              breaches, 
+              social_profiles: profiles, 
+              secrets, 
+              exposure_score: { score: exposureScore } 
+            }} 
+          />
+        </motion.div>
+
         {/* Summary Pills */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
@@ -173,9 +197,9 @@ export function ResultsDashboard({
               {profiles.slice(0, 3).map((profile, idx) => (
                 <div key={idx} className="flex items-center gap-1.5 text-xs">
                   {profile.verified ? (
-                    <ShieldCheck className="w-3 h-3 text-primary flex-shrink-0" />
+                    <ShieldCheck className="w-3 h-3 text-primary shrink-0" />
                   ) : (
-                    <ShieldAlert className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                    <ShieldAlert className="w-3 h-3 text-muted-foreground shrink-0" />
                   )}
                   <p className="text-foreground font-medium">{profile.platform}</p>
                 </div>
@@ -338,7 +362,7 @@ export function ResultsDashboard({
               <div className="space-y-3">
                 {secrets.map((secret, idx) => (
                   <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-destructive/5 border border-destructive/10">
-                    <AlertCircle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <p className="text-sm font-medium text-foreground">{secret.type}</p>

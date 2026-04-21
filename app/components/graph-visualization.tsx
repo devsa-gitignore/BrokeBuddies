@@ -319,7 +319,7 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
     }
   }, [])
 
-  const onNodeDragEnd = useCallback((event: any, node: Node) => {
+  const onNodeDragStop = useCallback((event: any, node: Node) => {
     if (simulationRef.current) {
       simulationRef.current.alphaTarget(0)
       const d3Node = simulationRef.current.nodes().find((n: any) => n.id === node.id)
@@ -331,7 +331,7 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
   }, [])
 
   return (
-    <div className="w-full h-[600px] bg-[#050505] rounded-3xl border border-primary/5 shadow-2xl overflow-hidden relative group">
+    <div className="w-full h-150 bg-[#050505] rounded-3xl border border-primary/5 shadow-2xl overflow-hidden relative group">
       {/* Interactive Title Overlay */}
       <div className="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none select-none">
         <h3 className="text-lg font-mono font-bold text-foreground flex items-center gap-2">
@@ -348,7 +348,7 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
         onEdgesChange={onEdgesChange}
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
-        onNodeDragEnd={onNodeDragEnd}
+        onNodeDragStop={onNodeDragStop}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         connectionLineType={ConnectionLineType.Straight}
@@ -365,11 +365,11 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
           size={1} 
           className="opacity-40"
         />
-        <Controls className="!bg-black/50 !backdrop-blur-md !border-white/5 !rounded-lg !overflow-hidden translate-x-2" />
+        <Controls className="bg-black/50! backdrop-blur-md! border-white/5! rounded-lg! overflow-hidden! translate-x-2" />
       </ReactFlow>
 
       {/* HUD Overlay */}
-      <div className="absolute inset-x-0 bottom-0 p-6 pointer-events-none flex justify-between items-end bg-gradient-to-t from-black/80 to-transparent">
+      <div className="absolute inset-x-0 bottom-0 p-6 pointer-events-none flex justify-between items-end bg-linear-to-t from-black/80 to-transparent">
         <div className="flex gap-4">
           <div className="flex flex-col gap-0.5">
             <span className="text-[9px] font-mono text-primary font-bold">PHYSICS</span>

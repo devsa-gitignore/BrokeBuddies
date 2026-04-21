@@ -13,7 +13,7 @@ interface EntryPageProps {
   isLoading?: boolean
 }
 
-export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
+export function EntryPage({ onScanStart, onDomainScanStart, isLoading = false }: EntryPageProps) {
   const [isEnterprise, setIsEnterprise] = useState(false)
   const [email, setEmail] = useState('')
   const [usernames, setUsernames] = useState<string[]>([])
@@ -115,7 +115,7 @@ export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
     >
       {/* Background gradient */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-20" />
+        <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-transparent opacity-20" />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
@@ -162,7 +162,7 @@ export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
                     </div>
 
                     <div
-                      className={`min-h-[42px] flex flex-wrap gap-2 items-center px-3 py-2 rounded-md border bg-card/50 cursor-text transition-colors ${errors.username
+                      className={`min-h-10.5 flex flex-wrap gap-2 items-center px-3 py-2 rounded-md border bg-card/50 cursor-text transition-colors ${errors.username
                           ? 'border-destructive'
                           : 'border-primary/20 focus-within:border-primary'
                         }`}
@@ -202,7 +202,7 @@ export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
                         onBlur={() => { if (usernameInput.trim()) addUsername(usernameInput) }}
                         placeholder={usernames.length === 0 ? 'your_handle, @alias…' : ''}
                         disabled={isLoading}
-                        className="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground"
+                        className="flex-1 min-w-30 bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground"
                       />
                     </div>
 

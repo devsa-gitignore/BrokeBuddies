@@ -4,14 +4,15 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { AlertTriangle, Users, ShieldAlert, ArrowRight, ExternalLink } from 'lucide-react'
+import { AlertTriangle, Users, ShieldAlert, ArrowRight, ExternalLink, Brain } from 'lucide-react'
+import { ThreatIntelligence } from './threat-intelligence'
 
 interface EmployeeResult {
   email: string
   exposure_score: {
     score: number
-    total_breaches: int
-    secrets_found: int
+    total_breaches: number
+    secrets_found: number
   }
 }
 
@@ -64,6 +65,30 @@ export function EnterpriseResults({ domain, results, onViewEmployee }: Enterpris
           </div>
         </Card>
       </div>
+
+      {/* Corporate Intelligence Hub */}
+      {weakestLink && (
+        <Card className="glass p-8 border-primary/20">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Brain className="text-primary" size={20} />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">Weakest Link Intelligence Hub</h2>
+            <Badge variant="outline" className="border-primary/20 text-primary uppercase text-[10px] tracking-widest pl-2 pr-2">
+              Deep AI Analysis
+            </Badge>
+          </div>
+          <ThreatIntelligence 
+            scanData={{ 
+              email: weakestLink.email, 
+              breaches: [], 
+              social_profiles: [], 
+              secrets: [], 
+              exposure_score: weakestLink.exposure_score 
+            }} 
+          />
+        </Card>
+      )}
 
       {/* Leaderboard */}
       <Card className="glass border-primary/10 overflow-hidden">

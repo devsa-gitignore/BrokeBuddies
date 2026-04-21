@@ -5,6 +5,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
 from osint.breaches import check_hibp
 from osint.sherlock import check_sherlock
 from osint.trufflehog import check_trufflehog

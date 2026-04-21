@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { EntryPage } from './components/entry-page'
 import { ScanTerminal } from './components/scan-terminal'
 import { ProfileConfirmation } from './components/profile-confirmation'
