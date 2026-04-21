@@ -31,8 +31,8 @@ export default function GitLoginPage() {
         className="relative z-10 w-full max-w-md"
       >
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-chart-4/10 border border-chart-4/20 mb-4">
-            <Github className="w-6 h-6 text-chart-4" />
+          <div className="inline-flex items-center justify-center w-14 h-14 neo-box-chart-4 mb-6">
+            <Github className="w-7 h-7 text-chart-4" />
           </div>
           <h1 className="text-3xl font-black tracking-tight mb-2">
             <span className="text-chart-4">Git</span> Scan
@@ -40,7 +40,7 @@ export default function GitLoginPage() {
           <p className="text-muted-foreground text-sm">Detect secrets and leaked keys in any public repository.</p>
         </div>
 
-        <div className="border border-chart-4/10 rounded-2xl bg-white/[0.02] backdrop-blur-xl p-8">
+        <div className="neo-box p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email</label>
@@ -51,8 +51,8 @@ export default function GitLoginPage() {
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full bg-black/40 border rounded-lg pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-colors ${
-                    errors.email ? 'border-destructive' : 'border-white/10 focus:border-chart-4/50'
+                  className={`w-full bg-background border-2 pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${
+                    errors.email ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-chart-4 focus:shadow-[4px_4px_0px_0px_var(--chart-4)]'
                   }`}
                 />
               </div>
@@ -68,8 +68,8 @@ export default function GitLoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full bg-black/40 border rounded-lg pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-colors ${
-                    errors.password ? 'border-destructive' : 'border-white/10 focus:border-chart-4/50'
+                  className={`w-full bg-background border-2 pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${
+                    errors.password ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-chart-4 focus:shadow-[4px_4px_0px_0px_var(--chart-4)]'
                   }`}
                 />
               </div>
@@ -78,9 +78,9 @@ export default function GitLoginPage() {
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-chart-4 text-background font-bold py-3 rounded-lg hover:bg-chart-4/90 transition-all shadow-lg shadow-chart-4/20 mt-2"
+              className="neo-btn-chart-4 w-full flex items-center justify-center gap-2 py-4 mt-4 text-base"
             >
-              Continue to Scan <ArrowRight className="w-4 h-4" />
+              Continue to Scan <ArrowRight className="w-5 h-5" />
             </button>
           </form>
         </div>

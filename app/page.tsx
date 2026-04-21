@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import Link from 'next/link'
 import { motion, useInView } from 'framer-motion'
 import { User, Github, Globe, ShieldAlert, ArrowRight, Lock, Eye, Terminal } from 'lucide-react'
+import { ASCIIText } from '@/app/components/ascii-text'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -35,8 +36,8 @@ const features = [
     icon: User,
     label: 'Personal Scan',
     color: 'text-primary',
-    border: 'border-primary/20 hover:border-primary/50',
-    glow: 'shadow-primary/10',
+    border: 'border-2 border-primary',
+    glow: 'shadow-[8px_8px_0px_0px_var(--primary)]',
     href: '/personal/login',
     cta: 'Go to Personal Scan',
     description:
@@ -47,8 +48,8 @@ const features = [
     icon: Github,
     label: 'Git Scan',
     color: 'text-chart-4',
-    border: 'border-chart-4/20 hover:border-chart-4/50',
-    glow: 'shadow-chart-4/10',
+    border: 'border-2 border-chart-4',
+    glow: 'shadow-[8px_8px_0px_0px_var(--chart-4)]',
     href: '/git/login',
     cta: 'Go to Git Scan',
     description:
@@ -59,8 +60,8 @@ const features = [
     icon: Globe,
     label: 'Domain Scan',
     color: 'text-accent',
-    border: 'border-accent/20 hover:border-accent/50',
-    glow: 'shadow-accent/10',
+    border: 'border-2 border-accent',
+    glow: 'shadow-[8px_8px_0px_0px_var(--accent)]',
     href: '/domain/login',
     cta: 'Go to Domain Scan',
     description:
@@ -89,23 +90,37 @@ export default function LandingPage() {
       {/* ── Hero ── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center text-center px-6 py-24">
         <Section className="max-w-4xl mx-auto">
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 border border-primary/20 rounded-full px-4 py-1.5 mb-8 bg-primary/5">
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 border-2 border-primary bg-primary/10 px-4 py-1.5 mb-8 shadow-[4px_4px_0px_0px_var(--primary)]">
             <ShieldAlert className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-mono text-primary tracking-widest uppercase">OSINT Intelligence Platform</span>
+            <span className="text-xs font-bold font-mono text-primary tracking-widest uppercase">OSINT Intelligence Platform</span>
           </motion.div>
+          <div className="w-full flex justify-center overflow-hidden">
+            <motion.h1 variants={fadeUp} className="flex flex-row flex-nowrap justify-center items-center gap-4 md:gap-6 mb-6">
+              {/* Replaces "SHADOW" */}
+              <ASCIIText
+                text="SHADOW"
+                enableWaves
+                asciiFontSize={5}
+                className="text-primary"
+              />
 
-          <motion.h1 variants={fadeUp} className="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-none">
-            <span className="text-primary">Shadow</span>
-            <span className="text-foreground">Self</span>
-          </motion.h1>
+              {/* Replaces "SELF" */}
+              <ASCIIText
+                text="SELF"
+                enableWaves
+                asciiFontSize={5}
+                className="text-foreground"
+              />
+            </motion.h1>
+          </div>
 
-          <motion.p variants={fadeUp} className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
+          <motion.p variants={fadeUp} className="text-xl md:text-xl font-mono text-muted-foreground max-w-3xl mx-auto mb-6 leading-relaxed">
             Every login you've ever made, every platform you've touched — your digital shadow exists whether you manage it or not.
           </motion.p>
 
-          <motion.p variants={fadeUp} className="text-base text-muted-foreground/70 max-w-xl mx-auto mb-12 leading-relaxed">
-            Data breaches expose billions of credentials every year. Attackers use this leaked data to access accounts, steal identities, and infiltrate organisations.{' '}
-            <span className="text-foreground font-semibold">ShadowSelf maps your exposure before they do.</span>
+          <motion.p variants={fadeUp} className="text-base font-mono text-muted-foreground/70 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Data breaches expose billions of credentials every year. Attackers use this leaked data to access accounts, steal identities, and infiltrate organisations.{' '} <br />
+            <span className="text-foreground font-bold">ShadowSelf maps your exposure before they do.</span>
           </motion.p>
 
           {/* Stats */}
@@ -118,18 +133,18 @@ export default function LandingPage() {
             ))}
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-4">
+          <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-6 mt-8">
             <Link
               href="/personal/login"
-              className="flex items-center gap-2 bg-primary text-primary-foreground font-bold px-6 py-3 rounded-lg hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40"
+              className="neo-btn-primary px-8 py-4 text-base"
             >
-              Start Scanning <ArrowRight className="w-4 h-4" />
+              Start Scanning <ArrowRight className="w-5 h-5 inline-block ml-1" />
             </Link>
             <Link
               href="/domain/login"
-              className="flex items-center gap-2 border border-muted text-muted-foreground font-bold px-6 py-3 rounded-lg hover:border-foreground hover:text-foreground transition-all"
+              className="neo-btn px-8 py-4 text-base"
             >
-              Enterprise Mode <Globe className="w-4 h-4" />
+              Enterprise Mode <Globe className="w-5 h-5 inline-block ml-1" />
             </Link>
           </motion.div>
         </Section>
@@ -152,7 +167,7 @@ export default function LandingPage() {
             <div className="inline-flex items-center gap-2 text-xs font-mono text-primary/60 uppercase tracking-widest mb-4">
               <Lock className="w-3 h-3" /> The Threat Is Real
             </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold font-mono uppercase tracking-tight mb-4">
               Your data is already out there.
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
@@ -166,9 +181,9 @@ export default function LandingPage() {
               { icon: ShieldAlert, title: 'Breaches Are Silent', body: "Most people don't find out their credentials were leaked until an attacker has already used them. Detection gaps average 9+ months." },
               { icon: Terminal, title: 'Secrets Get Committed', body: "API keys, tokens, and passwords accidentally pushed to GitHub repositories persist forever in commit history — even after being deleted." },
             ].map(({ icon: Icon, title, body }) => (
-              <motion.div key={title} variants={fadeUp} className="p-6 border border-white/5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-all">
-                <Icon className="w-6 h-6 text-primary mb-4" />
-                <h3 className="font-bold text-foreground mb-2">{title}</h3>
+              <motion.div key={title} variants={fadeUp} className="neo-box p-6 hover:-translate-y-2 hover:translate-x-[-2px] transition-transform duration-200">
+                <Icon className="w-8 h-8 text-primary mb-4" />
+                <h3 className="font-bold text-lg text-foreground mb-2 uppercase font-mono">{title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
               </motion.div>
             ))}
@@ -180,10 +195,10 @@ export default function LandingPage() {
       <section className="px-6 py-24 border-t border-primary/5">
         <Section className="max-w-6xl mx-auto">
           <motion.div variants={fadeUp} className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 text-xs font-mono text-primary/60 uppercase tracking-widest mb-4">
+            <div className="inline-flex items-center gap-2 text-l font-mono text-primary/60 uppercase tracking-widest mb-4">
               <ShieldAlert className="w-3 h-3" /> Choose Your Scan Mode
             </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter">
+            <h2 className="text-3xl md:text-4xl font-bold font-mono uppercase tracking-tight">
               Three attack surfaces. One platform.
             </h2>
           </motion.div>
@@ -193,17 +208,17 @@ export default function LandingPage() {
               <motion.div
                 key={label}
                 variants={fadeUp}
-                className={`relative flex flex-col p-8 border ${border} rounded-2xl bg-white/[0.02] shadow-xl ${glow} hover:bg-white/[0.04] transition-all group`}
+                className={`relative flex flex-col p-8 bg-background ${border} ${glow} hover:-translate-y-2 hover:translate-x-[-2px] transition-transform duration-200 group`}
               >
                 <div className="mb-6">
-                  <Icon className={`w-8 h-8 ${color} mb-4`} />
-                  <h3 className="text-xl font-black tracking-tight mb-3">{label}</h3>
+                  <Icon className={`w-10 h-10 ${color} mb-5`} />
+                  <h3 className="text-2xl font-black tracking-tight mb-3 uppercase">{label}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-8">
                   {badges.map((b) => (
-                    <span key={b} className={`text-[10px] font-bold font-mono uppercase tracking-widest px-2 py-1 rounded border border-white/10 bg-white/5 ${color}`}>
+                    <span key={b} className={`text-[10px] font-bold font-mono uppercase tracking-widest px-2 py-1 border-2 ${border} bg-background ${color}`}>
                       {b}
                     </span>
                   ))}
@@ -211,10 +226,10 @@ export default function LandingPage() {
 
                 <Link
                   href={href}
-                  className={`mt-auto flex items-center justify-between w-full px-5 py-3 rounded-lg border ${border} font-bold text-sm transition-all group-hover:bg-white/5`}
+                  className={`mt-auto flex items-center justify-between w-full px-5 py-4 border-2 ${border} font-bold text-sm transition-all hover:bg-white/5`}
                 >
                   <span className={color}>{cta}</span>
-                  <ArrowRight className={`w-4 h-4 ${color} group-hover:translate-x-1 transition-transform`} />
+                  <ArrowRight className={`w-5 h-5 ${color} group-hover:translate-x-2 transition-transform`} />
                 </Link>
               </motion.div>
             ))}

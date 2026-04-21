@@ -117,14 +117,14 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
       <div className="flex gap-4 border-b border-primary/10 mb-2">
         <button
           onClick={() => setActiveTab('ai')}
-          className={`pb-4 px-2 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'ai' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'
+          className={`pb-4 px-4 text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'ai' ? 'text-primary border-b-4 border-primary' : 'text-muted-foreground hover:text-foreground'
             }`}
         >
           Current Account Status
         </button>
         <button
           onClick={() => setActiveTab('stress')}
-          className={`pb-4 px-2 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'stress' ? 'text-accent border-b-2 border-accent' : 'text-muted-foreground hover:text-foreground'
+          className={`pb-4 px-4 text-xs font-bold uppercase tracking-widest transition-all ${activeTab === 'stress' ? 'text-accent border-b-4 border-accent' : 'text-muted-foreground hover:text-foreground'
             }`}
         >
           Password Stress Test
@@ -141,7 +141,7 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
             className="grid grid-cols-1 md:grid-cols-2 gap-8"
           >
             {/* AI Output */}
-            <Card className="glass border-primary/20 p-8 flex flex-col justify-between min-h-[300px]">
+            <Card className="neo-box-primary p-8 flex flex-col justify-between min-h-[300px]">
               <div>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2 bg-primary/10 rounded-lg">
@@ -215,7 +215,7 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
             exit={{ opacity: 0, x: 10 }}
             className="space-y-6"
           >
-            <Card className="glass border-accent/20 p-8">
+            <Card className="neo-box-accent p-8">
               <div className="flex flex-col md:flex-row gap-8">
                 {/* Input Panel */}
                 <div className="flex-1 space-y-6">
@@ -232,7 +232,7 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
                         placeholder="e.g. MyPassword2024"
                         value={password}
                         onChange={(e) => handleMutate(e.target.value)}
-                        className="bg-black/40 border-accent/30 focus:border-accent text-accent font-mono py-6 pl-10"
+                        className="bg-background border-2 border-accent/50 focus:border-accent focus:shadow-[4px_4px_0px_0px_var(--accent)] text-accent font-mono py-6 pl-10 rounded-none transition-all"
                       />
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-accent/40" size={16} />
                     </div>

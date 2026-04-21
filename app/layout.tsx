@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Press_Start_2P } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Navbar } from './components/navbar'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const _geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const _geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const _pixel = Press_Start_2P({ subsets: ["latin"], weight: "400", variable: "--font-pixel" });
 
 export const metadata: Metadata = {
   title: 'ShadowSelf - OSINT Dashboard',
@@ -28,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark bg-background" suppressHydrationWarning>
+    <html lang="en" className={`dark bg-background ${_geist.variable} ${_geistMono.variable} ${_pixel.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased bg-background text-foreground">
         <Navbar />
         <div className="pt-14">{children}</div>

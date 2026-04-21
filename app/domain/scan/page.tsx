@@ -81,7 +81,9 @@ export default function DomainScanPage() {
         <div className="flex items-center gap-4">
           <Shield className="w-10 h-10 text-red-500" />
           <div>
-            <h1 className="text-3xl font-black tracking-tighter uppercase italic">ShadowSelf</h1>
+            <h1 className="text-2xl font-pixel uppercase tracking-widest mt-1">
+              <span className="text-red-500">SHADOW</span>SELF
+            </h1>
             <p className="text-xs text-red-500/60 font-bold uppercase tracking-widest">Insider Threat Analytics</p>
           </div>
         </div>
@@ -157,23 +159,23 @@ export default function DomainScanPage() {
         {stage === 'results' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-5xl font-black italic uppercase tracking-tighter">Weakest Link Found</h2>
+              <h2 className="text-5xl font-black uppercase tracking-tighter">Weakest Link Found</h2>
               <p className="text-white/60">ShadowSelf analysis complete for {domain}. Ranking internal assets by risk exposure.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {employees.sort((a, b) => b.score - a.score).map((emp, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                   className={`bg-white/5 border ${i === 0 ? 'border-red-500' : 'border-white/10'} p-6 rounded-2xl relative overflow-hidden hover:bg-white/[0.07] transition-all`}>
-                  {i === 0 && <div className="absolute top-0 right-0 bg-red-500 text-black px-4 py-1 text-[10px] font-black uppercase italic tracking-widest rounded-bl-xl">Critical Risk</div>}
+                  {i === 0 && <div className="absolute top-0 right-0 bg-red-500 text-black px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl">Critical Risk</div>}
                   <div className="mb-6"><p className="text-[10px] text-white/40 font-bold uppercase mb-1">Target #{i + 1}</p><h3 className="text-lg font-black truncate">{emp.email}</h3></div>
                   <div className="flex items-end justify-between mb-8">
-                    <div><p className="text-[10px] text-white/40 uppercase font-black mb-1">Exposure Score</p><div className="text-4xl font-black italic">{emp.score}</div></div>
+                    <div><p className="text-[10px] text-white/40 uppercase font-black mb-1">Exposure Score</p><div className="text-4xl font-black">{emp.score}</div></div>
                     <BarChart2 className={`w-10 h-10 ${emp.score > 60 ? 'text-red-500' : 'text-blue-500'}`} />
                   </div>
                   <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-6">
-                    <div className="text-center"><p className="text-[9px] text-white/40 uppercase mb-1">Breaches</p><p className="font-bold text-red-400">{emp.breaches}</p></div>
-                    <div className="text-center border-x border-white/10"><p className="text-[9px] text-white/40 uppercase mb-1">Secrets</p><p className="font-bold text-orange-400">{emp.secrets}</p></div>
-                    <div className="text-center"><p className="text-[9px] text-white/40 uppercase mb-1">Social</p><p className="font-bold text-blue-400">{emp.profiles}</p></div>
+                    <div className="text-center"><p className="text-s text-white/40 uppercase mb-1">Breaches</p><p className="font-bold text-s-red-400">{emp.breaches}</p></div>
+                    <div className="text-center border-x border-white/10"><p className="text-s text-white/40 uppercase mb-1">Secrets</p><p className="font-bold text-s-orange-400">{emp.secrets}</p></div>
+                    <div className="text-center"><p className="text-s text-white/40 uppercase mb-1">Social</p><p className="font-bold text-s-blue-400">{emp.profiles}</p></div>
                   </div>
                 </motion.div>
               ))}

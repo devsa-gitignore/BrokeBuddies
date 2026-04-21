@@ -26,6 +26,14 @@ SITES_TO_CHECK = {
         "method": "body",
         "found_status": 200,
         "not_found_text": "Sorry, this page isn't available",
+        "found_text": "Instagram photos and videos",
+    },
+    "Spotify": {
+        "url": "https://open.spotify.com/user/{}",
+        "profile_url": "https://open.spotify.com/user/{}",
+        "method": "status",
+        "found_status": 200,
+        "not_found_status": 404,
     },
     "LinkedIn": {
         "url": "https://www.linkedin.com/in/{}/",
@@ -133,7 +141,12 @@ async def check_site(
                 else:
                     text = await resp.text(errors="ignore")
                     not_found_text = config.get("not_found_text", "")
-                    result["found"] = not_found_text.lower() not in text.lower()
+                    found_text = config.get("found_text", "")
+                    
+                    is_missing = not_found_text.lower() in text.lower() if not_found_text else False
+                    is_found = found_text.lower() in text.lower() if found_text else True
+                    
+                    result["found"] = is_found and not is_missing
 
             elif method == "body_json":
                 try:

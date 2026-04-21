@@ -78,6 +78,7 @@
 @theme inline {
   --font-sans: 'Geist', 'Geist Fallback';
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-pixel: var(--font-pixel);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -156,5 +157,70 @@
   
   .glow-destructive {
     @apply shadow-lg shadow-destructive/50;
+  }
+
+  /* Neo-brutalism Utilities */
+  .neo-border {
+    @apply border-2 border-foreground;
+  }
+  
+  .neo-box {
+    @apply border-2 border-foreground bg-background;
+    box-shadow: 4px 4px 0px 0px var(--foreground);
+  }
+  
+  .neo-box-primary {
+    @apply border-2 border-primary bg-background;
+    box-shadow: 4px 4px 0px 0px var(--primary);
+  }
+  
+  .neo-box-accent {
+    @apply border-2 border-accent bg-background;
+    box-shadow: 4px 4px 0px 0px var(--accent);
+  }
+
+  .neo-box-chart-4 {
+    @apply border-2 border-chart-4 bg-background;
+    box-shadow: 4px 4px 0px 0px var(--chart-4);
+  }
+
+  .neo-btn {
+    @apply font-bold border-2 border-foreground bg-foreground text-background transition-all hover:-translate-y-1 hover:translate-x-[-1px];
+    box-shadow: 4px 4px 0px 0px var(--foreground);
+  }
+  
+  .neo-btn:active {
+    @apply translate-y-[2px] translate-x-[2px];
+    box-shadow: 2px 2px 0px 0px var(--foreground);
+  }
+
+  .neo-btn-primary {
+    @apply font-bold border-2 border-primary bg-primary text-primary-foreground transition-all hover:-translate-y-1 hover:translate-x-[-1px];
+    box-shadow: 4px 4px 0px 0px var(--primary);
+  }
+  
+  .neo-btn-primary:active {
+    @apply translate-y-[2px] translate-x-[2px];
+    box-shadow: 2px 2px 0px 0px var(--primary);
+  }
+
+  .neo-btn-chart-4 {
+    @apply font-bold border-2 border-chart-4 bg-chart-4 text-background transition-all hover:-translate-y-1 hover:translate-x-[-1px];
+    box-shadow: 4px 4px 0px 0px var(--chart-4);
+  }
+  
+  .neo-btn-chart-4:active {
+    @apply translate-y-[2px] translate-x-[2px];
+    box-shadow: 2px 2px 0px 0px var(--chart-4);
+  }
+
+  .neo-btn-accent {
+    @apply font-bold border-2 border-accent bg-accent text-accent-foreground transition-all hover:-translate-y-1 hover:translate-x-[-1px];
+    box-shadow: 4px 4px 0px 0px var(--accent);
+  }
+  
+  .neo-btn-accent:active {
+    @apply translate-y-[2px] translate-x-[2px];
+    box-shadow: 2px 2px 0px 0px var(--accent);
   }
 }

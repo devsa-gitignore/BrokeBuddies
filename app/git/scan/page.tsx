@@ -25,13 +25,56 @@ export default function GitScanPage() {
   const [secrets, setSecrets] = useState<Secret[]>([])
   const [logs, setLogs] = useState<string[]>([])
   const [error, setError] = useState('')
+  const [isValidating, setIsValidating] = useState(false)
 
   const addLog = (msg: string) => setLogs(prev => [...prev, msg])
 
+  /** Returns an error string if invalid, or null if the URL is a valid public GitHub repo. */
+  const validateGithubUrl = async (url: string): Promise<string | null> => {
+    let parsed: URL
+    try {
+      parsed = new URL(url.trim())
+    } catch {
+      return 'Enter a valid URL (e.g. https://github.com/owner/repo)'
+    }
+
+    if (parsed.hostname !== 'github.com' && parsed.hostname !== 'www.github.com') {
+      return 'URL must be a github.com repository link'
+    }
+
+    // Path must be /owner/repo — exactly two non-empty segments
+    const parts = parsed.pathname.replace(/\.git$/, '').split('/').filter(Boolean)
+    if (parts.length < 2) {
+      return 'URL must point to a specific repository (github.com/owner/repo)'
+    }
+    if (parts.length > 2) {
+      return 'Point to the repository root, not a subdirectory (github.com/owner/repo)'
+    }
+
+    const [owner, repo] = parts
+    // Quick live check via GitHub API (unauthenticated, no CORS issue)
+    try {
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+        headers: { Accept: 'application/vnd.github+json' },
+      })
+      if (res.status === 404) return `Repository "${owner}/${repo}" not found or is private`
+      if (!res.ok) return `GitHub API returned ${res.status} — try again`
+    } catch {
+      return 'Could not reach GitHub API to verify the repository'
+    }
+
+    return null
+  }
+
   const startScan = async () => {
-    if (!repoUrl.trim()) { setError('Repository URL is required'); return }
-    if (!repoUrl.startsWith('http')) { setError('Enter a valid URL starting with https://'); return }
     setError('')
+    if (!repoUrl.trim()) { setError('Repository URL is required'); return }
+
+    setIsValidating(true)
+    const validationError = await validateGithubUrl(repoUrl)
+    setIsValidating(false)
+    if (validationError) { setError(validationError); return }
+
     setStage('scanning')
     setSecrets([])
     setLogs([`Targeting: ${repoUrl}`, 'Running Trufflehog secrets scan...'])
@@ -41,7 +84,6 @@ export default function GitScanPage() {
       const response = await fetch('http://localhost:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // Minimal payload — repo_url only; email/username are placeholders
         body: JSON.stringify({ email: 'git@scan.local', username: 'git-scanner', repo_url: repoUrl }),
       })
       if (!response.ok) throw new Error(`Backend returned ${response.status}`)
@@ -93,7 +135,7 @@ export default function GitScanPage() {
         {/* Input stage */}
         {stage === 'input' && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="border border-chart-4/20 rounded-2xl bg-white/[0.02] p-8">
+            <div className="neo-box p-8">
               <h2 className="font-bold text-lg mb-2 flex items-center gap-2"><Search className="w-5 h-5 text-chart-4" /> Target Repository</h2>
               <p className="text-muted-foreground text-sm mb-6">Enter any public GitHub repository URL to scan all commits for hardcoded secrets, tokens, and credentials.</p>
               <div className="relative">
@@ -104,12 +146,16 @@ export default function GitScanPage() {
                   value={repoUrl}
                   onChange={(e) => setRepoUrl(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && startScan()}
-                  className={`w-full bg-black/40 border rounded-lg pl-12 pr-4 py-4 font-mono text-sm text-foreground placeholder:text-muted-foreground/30 outline-none transition-colors ${error ? 'border-destructive' : 'border-white/10 focus:border-chart-4/50'}`}
+                  className={`w-full bg-background border-2 pl-12 pr-4 py-4 font-mono text-sm text-foreground placeholder:text-muted-foreground/30 outline-none transition-all ${error ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-chart-4 focus:shadow-[4px_4px_0px_0px_var(--chart-4)]'}`}
                 />
               </div>
               {error && <p className="text-xs text-destructive mt-2">{error}</p>}
-              <button onClick={startScan} className="mt-4 w-full flex items-center justify-center gap-2 bg-chart-4 text-background font-bold py-3 rounded-lg hover:bg-chart-4/90 transition-all shadow-lg shadow-chart-4/20">
-                <Terminal className="w-4 h-4" /> Initiate Scan
+              <button onClick={startScan} disabled={isValidating} className="mt-4 neo-btn-chart-4 w-full flex items-center justify-center gap-2 py-4 text-base disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_var(--chart-4)]">
+                {isValidating ? (
+                  <><div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" /> Verifying repo…</>
+                ) : (
+                  <><Terminal className="w-4 h-4" /> Initiate Scan</>
+                )}
               </button>
             </div>
           </motion.div>
@@ -145,7 +191,7 @@ export default function GitScanPage() {
         {stage === 'results' && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             {/* Summary */}
-            <div className="border border-chart-4/20 rounded-2xl bg-white/[0.02] p-6 flex items-center justify-between">
+            <div className="neo-box p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-1">Scan Target</p>
                 <p className="font-mono text-sm text-chart-4 truncate max-w-xs">{repoUrl}</p>
@@ -157,7 +203,7 @@ export default function GitScanPage() {
             </div>
 
             {secrets.length === 0 ? (
-              <div className="border border-primary/20 rounded-2xl bg-primary/5 p-8 text-center">
+              <div className="neo-box p-8 text-center border-primary shadow-[4px_4px_0px_0px_var(--primary)]">
                 <Key className="w-10 h-10 text-primary mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-1">No secrets detected</h3>
                 <p className="text-muted-foreground text-sm">No exposed API keys, tokens, or credentials were found in this repository's history.</p>
@@ -169,7 +215,7 @@ export default function GitScanPage() {
                 </h3>
                 {secrets.map((s, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                    className={`border rounded-xl p-4 font-mono text-xs ${severityColor[s.severity] || severityColor.low}`}>
+                    className={`border-2 rounded-none p-4 font-mono text-xs ${severityColor[s.severity] || severityColor.low}`}>
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-black uppercase tracking-widest">{s.type}</span>
                       <span className={`text-[10px] px-2 py-0.5 rounded border uppercase font-bold ${severityColor[s.severity]}`}>{s.severity}</span>
@@ -182,7 +228,7 @@ export default function GitScanPage() {
               </div>
             )}
 
-            <button onClick={() => { setStage('input'); setLogs([]) }} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
+            <button onClick={() => { setStage('input'); setLogs([]) }} className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-bold uppercase tracking-widest text-xs transition-colors">
               <ChevronRight className="w-4 h-4 rotate-180" /> Scan another repository
             </button>
           </motion.div>

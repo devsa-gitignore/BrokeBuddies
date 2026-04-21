@@ -8,19 +8,26 @@ from urllib.parse import urlparse
 
 # Secret patterns to scan for
 SECRET_PATTERNS = {
-    "AWS Access Key":    r"AKIA[0-9A-Z]{16}",
+    "AWS Access Key":    r"(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}",
     "AWS Secret Key":    r"(?i)aws.{0,20}secret.{0,20}['\"][0-9a-zA-Z/+]{40}['\"]",
-    "GitHub Token":      r"ghp_[A-Za-z0-9_]{36,255}",
-    "GitHub OAuth":      r"gho_[A-Za-z0-9_]{36,255}",
-    "GitHub Actions":    r"ghs_[A-Za-z0-9_]{36,255}",
+    "Azure Client Secret": r"(?i)azure.{0,20}secret.{0,20}['\"][a-zA-Z0-9_\-\.~]{30,40}['\"]",
+    "Azure Storage Key": r"(?i)AccountKey=[a-zA-Z0-9+\/]{86}==",
+    "GCP Service Account": r'"type":\s*"service_account"',
+    "Google API Key":    r"AIza[0-9A-Za-z\-_]{35}",
+    "Google OAuth":      r"[0-9]+-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com",
+    "GitHub Token":      r"gh[p|o|u|s|r]_[A-Za-z0-9_]{36,255}",
+    "GitLab Token":      r"glpat-[a-zA-Z0-9\-=_]{20}",
     "Slack Token":       r"xox[baprs]-[0-9A-Za-z\-]{10,48}",
     "Stripe Secret Key": r"sk_(live|test)_[A-Za-z0-9]{24,99}",
     "Stripe Public Key": r"pk_(live|test)_[A-Za-z0-9]{24,99}",
     "Private Key":       r"-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY",
     "Database URL":      r"(postgres|postgresql|mysql|mongodb(\+srv)?|redis)://[^\s\"'<>]+",
-    "Google API Key":    r"AIza[0-9A-Za-z\-_]{35}",
     "Heroku API Key":    r"(?i)heroku.{0,20}['\"][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}['\"]",
-    "Generic API Key":   r"(?i)(api[_\-]?key|apikey|api[_\-]?secret)['\"]?\s*[:=]\s*['\"]?[A-Za-z0-9\-_]{20,}",
+    "OpenAI API Key":    r"sk-[a-zA-Z0-9]{20,48}|sk-proj-[a-zA-Z0-9_-]{20,}",
+    "Twilio API Key":    r"SK[a-z0-9]{32}",
+    "SendGrid API Key":  r"SG\.[a-zA-Z0-9_\-\.]{66}",
+    "DigitalOcean Token": r"dop_v1_[a-f0-9]{64}",
+    "Generic API Key":   r"(?i)(api[_\-]?key|apikey|api[_\-]?secret|token)['\"]?\s*[:=]\s*['\"]?[A-Za-z0-9\-_]{20,}",
     "Password in Code":  r"(?i)(password|passwd|pwd)\s*[:=]\s*['\"][^'\"\s]{8,}['\"]",
 }
 
@@ -29,6 +36,7 @@ SCANNABLE_EXTENSIONS = {
     ".py", ".js", ".ts", ".jsx", ".tsx", ".env", ".yml", ".yaml",
     ".json", ".sh", ".bash", ".rb", ".go", ".java", ".php",
     ".toml", ".ini", ".cfg", ".conf", ".txt", ".md", ".xml",
+    ".tf", ".pem", ".key", ".properties", ".pub", ".envrc"
 }
 
 # High-value filenames (checked first)
@@ -38,7 +46,7 @@ HIGH_VALUE_NAMES = {
     "config.js", "config.ts", "config.json",
     "docker-compose.yml", "docker-compose.yaml",
     ".travis.yml", "Jenkinsfile", "Makefile",
-    "terraform.tfvars", ".tfvars",
+    "terraform.tfvars", ".tfvars", "secrets.yaml", "credentials.json",
 }
 
 
@@ -71,7 +79,7 @@ def scan_text_for_secrets(content: str, filename: str) -> List[Dict[str, Any]]:
                     masked = matched_val[:3] + "***"
 
                 severity = "high" if any(k in pattern_name for k in [
-                    "AWS", "Private Key", "GitHub", "Stripe", "Heroku", "Google"
+                    "AWS", "Private Key", "GitHub", "Stripe", "Heroku", "Google", "Azure", "GCP", "OpenAI", "DigitalOcean", "GitLab"
                 ]) else "medium"
 
                 found.append({
@@ -120,7 +128,7 @@ async def check_trufflehog(repo_url: str) -> Dict[str, Any]:
     """
     Scan a public GitHub repository for exposed secrets.
     Uses the GitHub Contents API (no auth required, 60 req/hour).
-    Prioritises high-risk files (.env, config, CI/CD) and scans up to 40 text files.
+    Prioritises high-risk files (.env, config, CI/CD) and scans up to 100 text files.
     """
     if not repo_url or not repo_url.strip():
         return {"repo_url": repo_url, "secrets_found": 0, "secrets": [], "files_scanned": 0}
@@ -173,11 +181,11 @@ async def check_trufflehog(repo_url: str) -> Dict[str, Any]:
         except Exception as e:
             return {"repo_url": repo_url, "secrets_found": 0, "secrets": [], "error": str(e)}
 
-        # Step 2: Sort by priority, cap at 40 scannable files
+        # Step 2: Sort by priority, cap at 100 scannable files
         scannable = sorted(
             [f for f in all_blobs if file_priority(f) < 2],
             key=file_priority,
-        )[:40]
+        )[:100]
 
         # Step 3: Fetch & scan in batches of 10
         batch_size = 10
@@ -192,7 +200,7 @@ async def check_trufflehog(repo_url: str) -> Dict[str, Any]:
                     scanned_files.append(file_path)
                     secrets_found.extend(scan_text_for_secrets(content, file_path))
 
-            if len(secrets_found) >= 20:
+            if len(secrets_found) >= 50:
                 break  # enough evidence, stop early
 
     return {

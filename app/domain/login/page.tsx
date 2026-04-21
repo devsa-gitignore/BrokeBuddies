@@ -31,8 +31,8 @@ export default function DomainLoginPage() {
         className="relative z-10 w-full max-w-md"
       >
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-accent/10 border border-accent/20 mb-4">
-            <Globe className="w-6 h-6 text-accent" />
+          <div className="inline-flex items-center justify-center w-14 h-14 neo-box-accent mb-6">
+            <Globe className="w-7 h-7 text-accent" />
           </div>
           <h1 className="text-3xl font-black tracking-tight mb-2">
             <span className="text-accent">Domain</span> Scan
@@ -40,7 +40,7 @@ export default function DomainLoginPage() {
           <p className="text-muted-foreground text-sm">Find the weakest link across an entire organisation.</p>
         </div>
 
-        <div className="border border-accent/10 rounded-2xl bg-white/[0.02] backdrop-blur-xl p-8">
+        <div className="neo-box p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email</label>
@@ -51,9 +51,8 @@ export default function DomainLoginPage() {
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full bg-black/40 border rounded-lg pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-colors ${
-                    errors.email ? 'border-destructive' : 'border-white/10 focus:border-accent/50'
-                  }`}
+                  className={`w-full bg-background border-2 pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${errors.email ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-accent focus:shadow-[4px_4px_0px_0px_var(--accent)]'
+                    }`}
                 />
               </div>
               {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
@@ -68,9 +67,8 @@ export default function DomainLoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full bg-black/40 border rounded-lg pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-colors ${
-                    errors.password ? 'border-destructive' : 'border-white/10 focus:border-accent/50'
-                  }`}
+                  className={`w-full bg-background border-2 pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${errors.password ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-accent focus:shadow-[4px_4px_0px_0px_var(--accent)]'
+                    }`}
                 />
               </div>
               {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
@@ -78,9 +76,9 @@ export default function DomainLoginPage() {
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-accent text-accent-foreground font-bold py-3 rounded-lg hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 mt-2"
+              className="neo-btn-accent w-full flex items-center justify-center gap-2 py-4 mt-4 text-base"
             >
-              Continue to Scan <ArrowRight className="w-4 h-4" />
+              Continue to Scan <ArrowRight className="w-5 h-5" />
             </button>
           </form>
         </div>

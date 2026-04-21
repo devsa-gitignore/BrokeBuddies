@@ -32,8 +32,8 @@ export default function PersonalLoginPage() {
       >
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 mb-4">
-            <User className="w-6 h-6 text-primary" />
+          <div className="inline-flex items-center justify-center w-14 h-14 neo-box-primary mb-6">
+            <User className="w-7 h-7 text-primary" />
           </div>
           <h1 className="text-3xl font-black tracking-tight mb-2">
             <span className="text-primary">Personal</span> Scan
@@ -42,7 +42,7 @@ export default function PersonalLoginPage() {
         </div>
 
         {/* Card */}
-        <div className="border border-primary/10 rounded-2xl bg-white/[0.02] backdrop-blur-xl p-8">
+        <div className="neo-box p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div className="space-y-1.5">
@@ -54,8 +54,8 @@ export default function PersonalLoginPage() {
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full bg-black/40 border rounded-lg pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-colors ${
-                    errors.email ? 'border-destructive' : 'border-white/10 focus:border-primary/50'
+                  className={`w-full bg-background border-2 pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${
+                    errors.email ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--primary)]'
                   }`}
                 />
               </div>
@@ -72,8 +72,8 @@ export default function PersonalLoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full bg-black/40 border rounded-lg pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-colors ${
-                    errors.password ? 'border-destructive' : 'border-white/10 focus:border-primary/50'
+                  className={`w-full bg-background border-2 pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${
+                    errors.password ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--primary)]'
                   }`}
                 />
               </div>
@@ -82,9 +82,9 @@ export default function PersonalLoginPage() {
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold py-3 rounded-lg hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 mt-2"
+              className="neo-btn-primary w-full flex items-center justify-center gap-2 py-4 mt-4 text-base"
             >
-              Continue to Scan <ArrowRight className="w-4 h-4" />
+              Continue to Scan <ArrowRight className="w-5 h-5" />
             </button>
           </form>
         </div>
