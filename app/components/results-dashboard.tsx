@@ -3,8 +3,9 @@
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { AlertCircle, CheckCircle2, Shield, ShieldCheck, ShieldAlert, ExternalLink } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Shield, ShieldCheck, ShieldAlert, ExternalLink, Brain } from 'lucide-react'
 import { GraphVisualization } from './graph-visualization'
+import { ThreatIntelligence } from './threat-intelligence'
 
 interface Breach {
   name: string

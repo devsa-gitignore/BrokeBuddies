@@ -1,4 +1,4 @@
-from .hibp import check_hibp
+from .breaches import check_hibp
 from .sherlock import check_sherlock
 from .trufflehog import check_trufflehog
 from .schemas import ScanRequest, ScanResult

@@ -9,14 +9,18 @@ import { X } from 'lucide-react'
 
 interface EntryPageProps {
   onScanStart: (email: string, username: string, repoUrl: string) => void
+  onDomainScanStart: (domain: string, webhookUrl: string) => void
   isLoading?: boolean
 }
 
 export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
+  const [isEnterprise, setIsEnterprise] = useState(false)
   const [email, setEmail] = useState('')
   const [usernames, setUsernames] = useState<string[]>([])
   const [usernameInput, setUsernameInput] = useState('')
   const [repoUrl, setRepoUrl] = useState('')
+  const [domain, setDomain] = useState('')
+  const [webhookUrl, setWebhookUrl] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -48,7 +52,20 @@ export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Commit any typed-but-not-yet-added username
+    const newErrors: Record<string, string> = {}
+
+    if (isEnterprise) {
+      if (!domain.trim()) newErrors.domain = 'Domain is required'
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors)
+        return
+      }
+      setErrors({})
+      onDomainScanStart(domain, webhookUrl)
+      return
+    }
+
+    // Individual Scan Logic
     const pendingUsername = usernameInput.trim().replace(/^@/, '')
     let finalUsernames = usernames
     if (pendingUsername && !usernames.includes(pendingUsername)) {
@@ -57,7 +74,6 @@ export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
       setUsernameInput('')
     }
 
-    const newErrors: Record<string, string> = {}
     if (!email.trim()) newErrors.email = 'Email is required'
     if (!email.includes('@')) newErrors.email = 'Invalid email format'
     if (finalUsernames.length === 0) newErrors.username = 'Add at least one username'
@@ -117,98 +133,135 @@ export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
           <Card className="glass border-primary/20 backdrop-blur-xl p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
 
-              {/* Email Input */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Email Address</label>
-                <div className="relative">
-                  <Input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={`bg-card/50 border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary ${errors.email ? 'border-destructive' : ''
-                      }`}
-                    disabled={isLoading}
-                  />
-                  {errors.email && (
-                    <p className="text-xs text-destructive mt-1">{errors.email}</p>
-                  )}
-                </div>
-              </div>
+              {!isEnterprise ? (
+                <>
+                  {/* Email Input */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Email Address</label>
+                    <div className="relative">
+                      <Input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={`bg-card/50 border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary ${errors.email ? 'border-destructive' : ''
+                          }`}
+                        disabled={isLoading}
+                      />
+                      {errors.email && (
+                        <p className="text-xs text-destructive mt-1">{errors.email}</p>
+                      )}
+                    </div>
+                  </div>
 
-              {/* Username Tag Input */}
-              <div className="space-y-2">
-                <div className="flex items-baseline justify-between">
-                  <label className="text-sm font-medium text-foreground">Usernames</label>
-                  <span className="text-xs text-muted-foreground">Enter → add tag</span>
-                </div>
+                  {/* Username Tag Input */}
+                  <div className="space-y-2">
+                    <div className="flex items-baseline justify-between">
+                      <label className="text-sm font-medium text-foreground">Usernames</label>
+                      <span className="text-xs text-muted-foreground">Enter → add tag</span>
+                    </div>
 
-                {/* Tag container — clicking anywhere focuses the hidden input */}
-                <div
-                  className={`min-h-[42px] flex flex-wrap gap-2 items-center px-3 py-2 rounded-md border bg-card/50 cursor-text transition-colors ${errors.username
-                      ? 'border-destructive'
-                      : 'border-primary/20 focus-within:border-primary'
-                    }`}
-                  onClick={() => inputRef.current?.focus()}
-                >
-                  <AnimatePresence>
-                    {usernames.map((u, i) => (
-                      <motion.span
-                        key={u}
-                        variants={chipVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className="flex items-center gap-1 bg-primary/15 border border-primary/30 text-primary text-xs font-mono px-2 py-1 rounded-full"
-                      >
-                        <span className="text-primary/60">@</span>
-                        {u}
-                        {!isLoading && (
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); removeUsername(i) }}
-                            className="ml-0.5 hover:text-destructive transition-colors rounded-full"
+                    <div
+                      className={`min-h-[42px] flex flex-wrap gap-2 items-center px-3 py-2 rounded-md border bg-card/50 cursor-text transition-colors ${errors.username
+                          ? 'border-destructive'
+                          : 'border-primary/20 focus-within:border-primary'
+                        }`}
+                      onClick={() => inputRef.current?.focus()}
+                    >
+                      <AnimatePresence>
+                        {usernames.map((u, i) => (
+                          <motion.span
+                            key={u}
+                            variants={chipVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="flex items-center gap-1 bg-primary/15 border border-primary/30 text-primary text-xs font-mono px-2 py-1 rounded-full"
                           >
-                            <X className="w-3 h-3" />
-                          </button>
-                        )}
-                      </motion.span>
-                    ))}
-                  </AnimatePresence>
+                            <span className="text-primary/60">@</span>
+                            {u}
+                            {!isLoading && (
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); removeUsername(i) }}
+                                className="ml-0.5 hover:text-destructive transition-colors rounded-full"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            )}
+                          </motion.span>
+                        ))}
+                      </AnimatePresence>
 
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={usernameInput}
-                    onChange={(e) => setUsernameInput(e.target.value)}
-                    onKeyDown={handleUsernameKeyDown}
-                    onBlur={() => { if (usernameInput.trim()) addUsername(usernameInput) }}
-                    placeholder={usernames.length === 0 ? 'your_handle, @alias…' : ''}
-                    disabled={isLoading}
-                    className="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground"
-                  />
-                </div>
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={usernameInput}
+                        onChange={(e) => setUsernameInput(e.target.value)}
+                        onKeyDown={handleUsernameKeyDown}
+                        onBlur={() => { if (usernameInput.trim()) addUsername(usernameInput) }}
+                        placeholder={usernames.length === 0 ? 'your_handle, @alias…' : ''}
+                        disabled={isLoading}
+                        className="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground"
+                      />
+                    </div>
 
-                {errors.username && (
-                  <p className="text-xs text-destructive">{errors.username}</p>
-                )}
-              </div>
+                    {errors.username && (
+                      <p className="text-xs text-destructive">{errors.username}</p>
+                    )}
+                  </div>
 
-              {/* Repo URL Input (Optional) */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Repository URL{' '}
-                  <span className="text-muted-foreground text-xs">(optional)</span>
-                </label>
-                <Input
-                  type="text"
-                  placeholder="https://github.com/user/repo"
-                  value={repoUrl}
-                  onChange={(e) => setRepoUrl(e.target.value)}
-                  className="bg-card/50 border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary"
-                  disabled={isLoading}
-                />
-              </div>
+                  {/* Repo URL Input (Optional) */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">
+                      Repository URL{' '}
+                      <span className="text-muted-foreground text-xs">(optional)</span>
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="https://github.com/user/repo"
+                      value={repoUrl}
+                      onChange={(e) => setRepoUrl(e.target.value)}
+                      className="bg-card/50 border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Domain Input */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Company Domain</label>
+                    <Input
+                      type="text"
+                      placeholder="startup.com"
+                      value={domain}
+                      onChange={(e) => setDomain(e.target.value)}
+                      className={`bg-card/50 border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary ${errors.domain ? 'border-destructive' : ''}`}
+                      disabled={isLoading}
+                    />
+                    {errors.domain && (
+                      <p className="text-xs text-destructive mt-1">{errors.domain}</p>
+                    )}
+                  </div>
+
+                  {/* Webhook Input */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">
+                      Monitoring Webhook{' '}
+                      <span className="text-muted-foreground text-xs">(Slack/Discord)</span>
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="https://hooks.slack.com/services/..."
+                      value={webhookUrl}
+                      onChange={(e) => setWebhookUrl(e.target.value)}
+                      className="bg-card/50 border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary font-mono text-xs"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Submit Button */}
               <Button
@@ -234,6 +287,23 @@ export function EntryPage({ onScanStart, isLoading = false }: EntryPageProps) {
               </p>
             </div>
           </Card>
+          
+            <motion.div 
+            className="mt-6 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <button 
+              type="button"
+              onClick={() => setIsEnterprise(!isEnterprise)}
+              className="text-xs font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors flex items-center justify-center gap-2 group mx-auto"
+            >
+              <div className="w-1 h-1 bg-primary rounded-full group-hover:scale-150 transition-all" />
+              {isEnterprise ? 'Switch to Individual Search' : 'Switch to Domain-Wide "Weakest Link" Analysis'}
+              <div className="w-1 h-1 bg-primary rounded-full group-hover:scale-150 transition-all" />
+            </button>
+          </motion.div>
         </motion.div>
 
         {/* Decorative Elements */}
