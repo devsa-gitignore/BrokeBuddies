@@ -27,20 +27,20 @@ interface ProfileConfirmationProps {
 }
 
 const PLATFORM_COLORS: Record<string, string> = {
-  GitHub:      'bg-zinc-800 text-white border-zinc-600',
-  Instagram:   'bg-gradient-to-br from-purple-600 to-pink-500 text-white border-purple-400',
-  LinkedIn:    'bg-blue-700 text-white border-blue-500',
-  Reddit:      'bg-orange-600 text-white border-orange-400',
-  YouTube:     'bg-red-600 text-white border-red-400',
+  GitHub: 'bg-zinc-800 text-white border-zinc-600',
+  Instagram: 'bg-gradient-to-br from-purple-600 to-pink-500 text-white border-purple-400',
+  LinkedIn: 'bg-blue-700 text-white border-blue-500',
+  Reddit: 'bg-orange-600 text-white border-orange-400',
+  YouTube: 'bg-red-600 text-white border-red-400',
   'Twitter/X': 'bg-black text-white border-zinc-600',
-  TikTok:      'bg-black text-white border-zinc-500',
-  Pinterest:   'bg-red-700 text-white border-red-500',
-  SoundCloud:  'bg-orange-500 text-white border-orange-400',
-  Keybase:     'bg-sky-700 text-white border-sky-500',
-  Medium:      'bg-emerald-700 text-white border-emerald-500',
-  LeetCode:    'bg-amber-500 text-black border-amber-400',
-  CodeChef:    'bg-amber-800 text-white border-amber-600',
-  Gravatar:    'bg-indigo-700 text-white border-indigo-500',
+  TikTok: 'bg-black text-white border-zinc-500',
+  Pinterest: 'bg-red-700 text-white border-red-500',
+  SoundCloud: 'bg-orange-500 text-white border-orange-400',
+  Keybase: 'bg-sky-700 text-white border-sky-500',
+  Medium: 'bg-emerald-700 text-white border-emerald-500',
+  LeetCode: 'bg-amber-500 text-black border-amber-400',
+  CodeChef: 'bg-amber-800 text-white border-amber-600',
+  Gravatar: 'bg-indigo-700 text-white border-indigo-500',
 }
 
 export function ProfileConfirmation({
@@ -114,11 +114,11 @@ export function ProfileConfirmation({
       if (r.ok && (r as any).data) {
         const d = (r as any).data
         const newProfile: Profile = {
-          platform:   d.platform || 'Unknown',
-          url:        d.url || r.url,
-          username:   d.username || r.url,
-          found:      true,
-          verified:   false,
+          platform: d.platform || 'Unknown',
+          url: d.url || r.url,
+          username: d.username || r.url,
+          found: true,
+          verified: false,
           user_added: true,
         }
         added.push(newProfile)
@@ -167,7 +167,7 @@ export function ProfileConfirmation({
 
         {/* Header */}
         <motion.div className="text-center mb-10" variants={itemVariants}>
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary text-xs font-mono px-3 py-1 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 bg-primary/20 border-2 border-primary text-primary text-xs font-mono font-bold uppercase tracking-widest px-3 py-1 rounded-none mb-6 shadow-[2px_2px_0px_0px_var(--primary)]">
             Step 3 of 4 — Verify Your Profiles
           </div>
           <h1 className="text-4xl font-bold mb-3">
@@ -265,7 +265,7 @@ export function ProfileConfirmation({
 
         {/* ── Manual URL input ──────────────────────────────────────────── */}
         <motion.div className="mb-6" variants={itemVariants}>
-          <Card className="glass border-primary/15 p-4">
+          <Card className="neo-box border-2 border-primary shadow-[6px_6px_0px_0px_var(--primary)] p-6 rounded-none">
             <p className="text-sm font-semibold text-foreground mb-1 flex items-center gap-2">
               <Plus className="w-4 h-4 text-primary" />
               Add your own accounts
@@ -280,20 +280,19 @@ export function ProfileConfirmation({
               value={urlInput}
               onChange={(e) => { setUrlInput(e.target.value); setAddState('idle'); setAddResults([]) }}
               rows={3}
-              className="w-full bg-background border border-primary/20 focus:border-primary/50 rounded-md px-3 py-2 text-sm font-mono outline-none transition-colors resize-none mb-3 placeholder:text-muted-foreground/40"
+              className="w-full bg-background border-2 border-primary/50 focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--primary)] rounded-none px-3 py-2 text-sm font-mono outline-none transition-all resize-none mb-4 placeholder:text-muted-foreground/40"
             />
 
             <div className="flex items-center justify-between gap-3 flex-wrap">
-              <Button
+              <button
                 onClick={handleVerifyAll}
                 disabled={!urlInput.trim() || addState === 'loading'}
-                size="sm"
-                className="bg-primary text-primary-foreground gap-1.5 px-4"
+                className="neo-btn-primary px-4 py-2 text-sm flex items-center gap-1.5 uppercase tracking-widest font-mono disabled:opacity-50 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_white] hover:shadow-[2px_2px_0px_0px_white]"
               >
                 {addState === 'loading'
                   ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Verifying…</>
                   : <><Plus className="w-3.5 h-3.5" /> Verify & Add All</>}
-              </Button>
+              </button>
 
               {addState === 'done' && addResults.length > 0 && (
                 <p className="text-xs text-muted-foreground">
@@ -333,27 +332,25 @@ export function ProfileConfirmation({
 
         {/* Action bar */}
         <motion.div variants={itemVariants}>
-          <Card className="glass border-primary/20 p-4 flex items-center justify-between gap-4 flex-wrap">
-            <div className="text-sm text-muted-foreground">
-              <span className="text-foreground font-semibold text-base">{confirmedCount}</span>{' '}
-              {confirmedCount === 1 ? 'profile' : 'profiles'} selected for your report
+          <Card className="neo-box border-2 border-primary shadow-[6px_6px_0px_0px_var(--primary)] p-6 flex items-center justify-between gap-4 flex-wrap rounded-none mt-4">
+            <div className="text-sm text-muted-foreground uppercase font-mono tracking-widest">
+              <span className="text-foreground font-bold text-lg">{confirmedCount}</span>{' '}
+              {confirmedCount === 1 ? 'profile' : 'profiles'} selected
             </div>
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                size="sm"
+            <div className="flex gap-4">
+              <button
                 onClick={onReset}
-                className="border-primary/20 text-muted-foreground hover:bg-primary/10"
+                className="neo-btn border-2 border-muted-foreground bg-transparent text-muted-foreground hover:bg-muted-foreground hover:text-black px-6 py-3 font-mono font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_rgba(156,163,175,0.5)] transition-all"
               >
                 Start Over
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={handleContinue}
-                className="bg-primary text-primary-foreground font-bold gap-2 hover:bg-primary/90"
+                className="neo-btn-primary px-6 py-3 text-base flex items-center gap-2 font-bold uppercase tracking-widest shadow-[4px_4px_0px_0px_white] hover:shadow-[2px_2px_0px_0px_white]"
               >
                 Generate Report
                 <ArrowRight className="w-4 h-4" />
-              </Button>
+              </button>
             </div>
           </Card>
         </motion.div>
@@ -406,15 +403,14 @@ function ProfileCard({
       transition={{ duration: 0.2 }}
     >
       <Card
-        className={`relative p-4 transition-all duration-200 cursor-pointer select-none ${
-          isSelected
-            ? isVerified
-              ? 'border-primary/50 bg-primary/5 shadow-[0_0_12px_rgba(var(--primary)/0.15)]'
-              : isUserAdded
-                ? 'border-accent/40 bg-accent/5'
-                : 'border-primary/30 bg-primary/5'
-            : 'border-primary/10 bg-card/30 opacity-60'
-        }`}
+        className={`relative p-4 transition-all duration-200 cursor-pointer select-none rounded-none border-2 hover:-translate-y-1 hover:translate-x-[-1px] ${isSelected
+          ? isVerified
+            ? 'border-primary bg-primary/5 shadow-[4px_4px_0px_0px_var(--primary)]'
+            : isUserAdded
+              ? 'border-accent bg-accent/5 shadow-[4px_4px_0px_0px_var(--accent)]'
+              : 'border-primary/80 bg-primary/5 shadow-[4px_4px_0px_0px_var(--primary)]'
+          : 'border-muted-foreground/30 bg-card/30 shadow-[4px_4px_0px_0px_rgba(156,163,175,0.3)] opacity-70 hover:opacity-100 hover:shadow-[4px_4px_0px_0px_var(--primary)] hover:border-primary/50'
+          }`}
         onClick={onToggle}
       >
         <div className="flex items-center gap-3">
@@ -422,10 +418,10 @@ function ProfileCard({
             <img
               src={profile.avatar_url}
               alt={profile.username}
-              className="w-10 h-10 rounded-full border border-primary/20 flex-shrink-0"
+              className="w-10 h-10 border-2 border-primary flex-shrink-0 rounded-none object-cover"
             />
           ) : (
-            <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-sm font-bold flex-shrink-0 ${colorClass}`}>
+            <div className={`w-10 h-10 border-2 flex items-center justify-center text-sm font-bold flex-shrink-0 rounded-none ${colorClass}`}>
               {profile.platform[0]}
             </div>
           )}
@@ -457,9 +453,8 @@ function ProfileCard({
           </a>
 
           <div
-            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-              isSelected ? 'bg-primary border-primary' : 'bg-transparent border-muted-foreground/30'
-            }`}
+            className={`w-6 h-6 border-2 flex items-center justify-center flex-shrink-0 transition-all rounded-none ${isSelected ? 'bg-primary border-primary shadow-[2px_2px_0px_0px_var(--primary)]' : 'bg-transparent border-muted-foreground/30'
+              }`}
           >
             {isSelected && <Check className="w-3.5 h-3.5 text-primary-foreground" />}
           </div>

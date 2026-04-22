@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, Variants } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, RotateCcw } from 'lucide-react'
@@ -32,23 +32,23 @@ export function ScanTerminal({ logs, progress, scanError, onReset, isGlitchTrigg
   const getLogColor = (type: TerminalLine['type']) => {
     switch (type) {
       case 'success': return 'text-primary'
-      case 'error':   return 'text-destructive'
+      case 'error': return 'text-destructive'
       case 'progress': return 'text-accent'
-      default:        return 'text-muted-foreground'
+      default: return 'text-muted-foreground'
     }
   }
 
   const getLogPrefix = (type: TerminalLine['type']) => {
     switch (type) {
       case 'success': return '✓'
-      case 'error':   return '✗'
+      case 'error': return '✗'
       case 'progress': return '→'
-      default:        return '•'
+      default: return '•'
     }
   }
 
   // Glitch animation variants
-  const glitchVariants = {
+  const glitchVariants: Variants = {
     glitch: {
       x: [0, -5, 5, -2, 2, 0],
       y: [0, 2, -2, 1, -1, 0],
@@ -69,12 +69,10 @@ export function ScanTerminal({ logs, progress, scanError, onReset, isGlitchTrigg
       filter: 'none'
     }
   }
-
   return (
     <motion.div
-      className={`min-h-screen transition-colors duration-300 flex flex-col items-center justify-center p-4 ${
-        isGlitchTriggered ? 'bg-destructive/20' : 'bg-background'
-      }`}
+      className={`min-h-screen transition-colors duration-300 flex flex-col items-center justify-center p-4 ${isGlitchTriggered ? 'bg-destructive/20' : 'bg-background'
+        }`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -105,9 +103,8 @@ export function ScanTerminal({ logs, progress, scanError, onReset, isGlitchTrigg
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className={`text-3xl font-bold mb-2 flex items-center gap-3 ${
-              scanError ? 'text-destructive' : isGlitchTriggered ? 'text-destructive animate-pulse' : 'text-primary'
-            }`}>
+            <h1 className={`text-3xl font-bold mb-2 flex items-center gap-3 ${scanError ? 'text-destructive' : isGlitchTriggered ? 'text-destructive animate-pulse' : 'text-primary'
+              }`}>
               {scanError ? 'SCAN FAILED' : isGlitchTriggered ? '⚠️ CRITICAL VULNERABILITY DETECTED' : 'SCANNING…'}
               {isGlitchTriggered && <AlertTriangle className="w-8 h-8 text-destructive" />}
             </h1>
@@ -130,13 +127,11 @@ export function ScanTerminal({ logs, progress, scanError, onReset, isGlitchTrigg
                   <span className="text-sm text-muted-foreground">Progress</span>
                   <span className={`text-sm font-mono ${isGlitchTriggered ? 'text-destructive' : 'text-primary'}`}>{progress}%</span>
                 </div>
-                <div className={`h-2 bg-card/50 border rounded-full overflow-hidden ${
-                  isGlitchTriggered ? 'border-destructive/40' : 'border-primary/20'
-                }`}>
+                <div className={`h-2 bg-card/50 border rounded-full overflow-hidden ${isGlitchTriggered ? 'border-destructive/40' : 'border-primary/20'
+                  }`}>
                   <motion.div
-                    className={`h-full ${
-                      isGlitchTriggered ? 'bg-destructive' : 'bg-gradient-to-r from-primary via-accent to-primary'
-                    }`}
+                    className={`h-full ${isGlitchTriggered ? 'bg-destructive' : 'bg-gradient-to-r from-primary via-accent to-primary'
+                      }`}
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 0.3 }}
@@ -147,13 +142,11 @@ export function ScanTerminal({ logs, progress, scanError, onReset, isGlitchTrigg
           </AnimatePresence>
 
           {/* Terminal */}
-          <Card className={`glass backdrop-blur-xl p-6 font-mono text-sm h-96 overflow-hidden flex flex-col transition-colors duration-300 ${
-            isGlitchTriggered ? 'border-destructive/50 bg-destructive/10' : 'border-primary/20'
-          }`}>
-            {/* Terminal Header */}
-            <div className={`flex items-center gap-2 pb-4 border-b mb-4 ${
-              isGlitchTriggered ? 'border-destructive/30' : 'border-primary/10'
+          <Card className={`glass backdrop-blur-xl p-6 font-mono text-sm h-96 overflow-hidden flex flex-col transition-colors duration-300 ${isGlitchTriggered ? 'border-destructive/50 bg-destructive/10' : 'border-primary/20'
             }`}>
+            {/* Terminal Header */}
+            <div className={`flex items-center gap-2 pb-4 border-b mb-4 ${isGlitchTriggered ? 'border-destructive/30' : 'border-primary/10'
+              }`}>
               <div className="flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-destructive animate-ping" />
                 <div className="w-3 h-3 rounded-full bg-accent" />
@@ -187,9 +180,8 @@ export function ScanTerminal({ logs, progress, scanError, onReset, isGlitchTrigg
                     <span className={`flex-shrink-0 w-4 ${getLogColor(log.type)}`}>
                       {getLogPrefix(log.type)}
                     </span>
-                    <span className={`flex-1 ${getLogColor(log.type)} ${
-                      isGlitchTriggered && log.message.toUpperCase().includes('AWS') ? 'font-bold underline' : ''
-                    }`}>{log.message}</span>
+                    <span className={`flex-1 ${getLogColor(log.type)} ${isGlitchTriggered && log.message.toUpperCase().includes('AWS') ? 'font-bold underline' : ''
+                      }`}>{log.message}</span>
                     <span className="text-muted-foreground text-xs flex-shrink-0">{log.timestamp}</span>
                   </motion.div>
                 ))
@@ -237,7 +229,7 @@ export function ScanTerminal({ logs, progress, scanError, onReset, isGlitchTrigg
                     onClick={onReset}
                     variant="outline"
                     size="sm"
-                    className="border-destructive/30 text-destructive hover:bg-destructive/10 gap-2"
+                    className="border-3 border-destructive/30 text-destructive hover:bg-destructive/10 gap-2"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     Return to Home

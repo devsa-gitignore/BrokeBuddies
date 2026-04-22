@@ -2,11 +2,11 @@
 
 import { useRef } from 'react'
 import Link from 'next/link'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, Variants } from 'framer-motion'
 import { User, Github, Globe, ShieldAlert, ArrowRight, Lock, Eye, Terminal } from 'lucide-react'
 import { ASCIIText } from '@/app/components/ascii-text'
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
 }

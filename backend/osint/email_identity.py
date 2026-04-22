@@ -2,6 +2,7 @@ import aiohttp
 import asyncio
 import hashlib
 from typing import Dict, Any, List
+import os
 
 
 async def lookup_email_identity(email: str) -> Dict[str, Any]:
@@ -28,8 +29,13 @@ async def lookup_email_identity(email: str) -> Dict[str, Any]:
 
         # ── 1. GitHub: search users by email ──────────────────────────────────
         try:
+            gh_headers = dict(headers)
+            github_token = os.getenv("GITHUB_TOKEN")
+            if github_token:
+                gh_headers["Authorization"] = f"token {github_token}"
+                
             gh_url = f"https://api.github.com/search/users?q={email_lower}+in:email"
-            async with session.get(gh_url) as resp:
+            async with session.get(gh_url, headers=gh_headers) as resp:
                 if resp.status == 200:
                     data = await resp.json(content_type=None)
                     for item in data.get("items", [])[:5]:

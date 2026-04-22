@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Shield, Users, ChevronRight, Search, BarChart2 } from 'lucide-react'
+import { Shield, Users, ChevronRight, Search, BarChart2, Globe } from 'lucide-react'
 
 interface ScannedEmployee {
   email: string

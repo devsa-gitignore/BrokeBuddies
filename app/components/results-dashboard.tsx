@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -55,6 +56,18 @@ export function ResultsDashboard({
   const verifiedProfiles = profiles.filter((p) => p.verified)
   const possibleProfiles = profiles.filter((p) => !p.verified)
   const secretsFound = secrets.length
+
+  const [showAllBreaches, setShowAllBreaches] = useState(false)
+
+  const sortedBreaches = [...breaches].sort((a, b) => {
+    // Some breach_date formats might be just years or specific dates. 
+    // new Date() handles standard formats correctly.
+    const dateA = new Date(a.breach_date).getTime()
+    const dateB = new Date(b.breach_date).getTime()
+    return dateB - dateA // Latest to oldest
+  })
+
+  const displayedBreaches = showAllBreaches ? sortedBreaches : sortedBreaches.slice(0, 5)
 
   const getRiskColor = (score: number) => {
     if (score >= 80) return 'text-destructive'
@@ -139,7 +152,7 @@ export function ResultsDashboard({
               <Brain className="text-primary" size={25} />
             </div>
             <h2 className="text-2xl font-black tracking-tight text-foreground uppercase">Intelligence Hub</h2>
-            <Badge variant="outline" className="border-primary/20 text-primary uppercase text-[10px] tracking-widest">
+            <Badge variant="outline" className="border-3 border-primary/20 text-primary uppercase text-s tracking-widest">
               AI-Powered
             </Badge>
           </div>
@@ -162,16 +175,15 @@ export function ResultsDashboard({
           <Card className="neo-box border-destructive shadow-[4px_4px_0px_0px_var(--destructive)] p-6 h-full">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 text-destructive" />
-              <h3 className="font-bold tracking-tight text-foreground uppercase">Breaches</h3>
+              <h2 className="font-bold tracking-tight text-foreground text-xl uppercase">Breaches</h2>
             </div>
             <p className="text-3xl font-bold text-destructive mb-4">{breaches.length}</p>
             <div className="space-y-2">
               {breaches.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No breaches found
-                </p>
+                <p className="text-sm text-muted-foreground">No breaches found </p>
               ) : (
-                breaches.slice(0, 3).map((breach, idx) => (
-                  <div key={idx} className="text-xs">
+                sortedBreaches.slice(0, 3).map((breach, idx) => (
+                  <div key={idx} className="text-s">
                     <p className="text-foreground font-medium">{breach.name}</p>
                     <p className="text-muted-foreground">{breach.breached_data.length} data types exposed</p>
                   </div>
@@ -184,19 +196,19 @@ export function ResultsDashboard({
           <Card className="neo-box border-accent shadow-[4px_4px_0px_0px_var(--accent)] p-6 h-full">
             <div className="flex items-center gap-2 mb-4">
               <CheckCircle2 className="w-5 h-5 text-accent" />
-              <h3 className="font-bold tracking-tight text-foreground uppercase">Profiles Found</h3>
+              <h3 className="font-bold tracking-tight text-foreground text-xl uppercase">Profiles Found</h3>
             </div>
             <div className="flex items-baseline gap-3 mb-4">
               <p className="text-3xl font-bold text-accent">{profiles.length}</p>
               {verifiedProfiles.length > 0 && (
-                <span className="text-xs text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
+                <span className="text-md text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
                   {verifiedProfiles.length} email-verified
                 </span>
               )}
             </div>
             <div className="space-y-2">
               {profiles.slice(0, 3).map((profile, idx) => (
-                <div key={idx} className="flex items-center gap-1.5 text-xs">
+                <div key={idx} className="flex items-center gap-1.5 text-s">
                   {profile.verified ? (
                     <ShieldCheck className="w-3 h-3 text-primary shrink-0" />
                   ) : (
@@ -212,12 +224,12 @@ export function ResultsDashboard({
           <Card className="neo-box border-destructive shadow-[4px_4px_0px_0px_var(--destructive)] p-6 h-full">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 text-destructive" />
-              <h3 className="font-bold tracking-tight text-foreground uppercase">Exposed Secrets</h3>
+              <h3 className="font-bold tracking-tight text-foreground text-xl uppercase">Exposed Secrets</h3>
             </div>
-            <p className="text-3xl font-bold text-destructive mb-4">{secretsFound}</p>
+            <p className="text-5xl font-bold text-destructive mb-4">{secretsFound}</p>
             <div className="space-y-2">
               {secretsFound === 0 ? (
-                <p className="text-sm text-muted-foreground">No secrets found ✓</p>
+                <p className="text-m text-muted-foreground">No secrets found </p>
               ) : (
                 secrets.slice(0, 3).map((secret, idx) => (
                   <div key={idx} className="text-xs">
@@ -233,12 +245,12 @@ export function ResultsDashboard({
         {/* Profiles Detail */}
         {profiles.length > 0 && (
           <motion.div variants={itemVariants} className="mb-8">
-            <Card className="neo-box border-accent shadow-[4px_4px_0px_0px_var(--accent)] p-6">
+            {/* Sharpened main card */}
+            <Card className="neo-box border-2 border-accent shadow-[4px_4px_0px_0px_var(--accent)] p-6 rounded-none">
               <h3 className="text-xl font-bold tracking-tight text-foreground uppercase mb-6">Social Profiles</h3>
 
-              {/* Email-verified accounts */}
               {verifiedProfiles.length > 0 && (
-                <div className="mb-6">
+                <div className="mb-3"> {/* Gap reduced here */}
                   <div className="flex items-center gap-2 mb-3">
                     <ShieldCheck className="w-4 h-4 text-primary" />
                     <p className="text-sm font-semibold text-primary">
@@ -255,26 +267,27 @@ export function ResultsDashboard({
                         href={profile.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors group"
+                        // Neobrutalist styles: solid border, hard shadow, push-down hover
+                        className="flex items-center gap-3 p-3 bg-primary/5 border-2 border-primary shadow-[3px_3px_0px_0px_var(--primary)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_var(--primary)] transition-all group"
                       >
                         {profile.avatar_url ? (
                           <img
                             src={profile.avatar_url}
                             alt={profile.username}
-                            className="w-8 h-8 rounded-full border border-primary/20"
+                            className="w-8 h-8 border-2 border-primary"
                           />
                         ) : (
-                          <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-xs text-primary font-bold">
+                          <div className="w-8 h-8 bg-primary/20 border-2 border-primary flex items-center justify-center text-xs text-primary font-bold">
                             {profile.platform[0]}
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{profile.platform}</p>
+                          <p className="text-sm font-bold text-foreground truncate">{profile.platform}</p>
                           <p className="text-xs text-muted-foreground truncate font-mono">@{profile.username}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-                          <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                          <ExternalLink className="w-3.5 h-3.5 text-foreground group-hover:text-primary transition-colors" />
                         </div>
                       </a>
                     ))}
@@ -282,7 +295,6 @@ export function ResultsDashboard({
                 </div>
               )}
 
-              {/* Username-matched (possible) accounts */}
               {possibleProfiles.length > 0 && (
                 <div>
                   <div className="flex items-center gap-2 mb-3">
@@ -301,16 +313,17 @@ export function ResultsDashboard({
                         href={profile.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 rounded-lg border border-primary/10 bg-card/30 hover:bg-card/50 transition-colors group"
+                        // Neobrutalist styles for muted matches
+                        className="flex items-center gap-3 p-3 bg-card/30 border-2 border-muted-foreground/50 shadow-[3px_3px_0px_0px_rgba(156,163,175,0.5)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(156,163,175,0.5)] transition-all group"
                       >
-                        <div className="w-8 h-8 rounded-full bg-muted/30 border border-muted/20 flex items-center justify-center text-xs text-muted-foreground font-bold">
+                        <div className="w-8 h-8 bg-muted/30 border-2 border-muted-foreground/50 flex items-center justify-center text-xs text-muted-foreground font-bold">
                           {profile.platform[0]}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{profile.platform}</p>
+                          <p className="text-sm font-bold text-foreground truncate">{profile.platform}</p>
                           <p className="text-xs text-muted-foreground truncate font-mono">@{profile.username}</p>
                         </div>
-                        <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                        <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
                       </a>
                     ))}
                   </div>
@@ -319,18 +332,17 @@ export function ResultsDashboard({
             </Card>
           </motion.div>
         )}
-
         {/* Breach Details */}
         {breaches.length > 0 && (
           <motion.div variants={itemVariants} className="mb-8">
             <Card className="neo-box border-destructive shadow-[4px_4px_0px_0px_var(--destructive)] p-6">
-              <h3 className="text-xl font-bold tracking-tight text-foreground uppercase mb-4">Breach Details</h3>
+              <h3 className="text-2xl font-bold tracking-tight text-foreground uppercase mb-4">Breach Details</h3>
               <div className="space-y-4">
-                {breaches.map((breach, idx) => (
+                {displayedBreaches.map((breach, idx) => (
                   <div key={idx} className="border-b border-destructive/10 pb-4 last:border-0">
                     <div className="flex items-start justify-between mb-2">
                       <h4 className="font-medium text-foreground">{breach.name}</h4>
-                      <span className={`text-xs px-2 py-1 rounded ${breach.severity === 'high'
+                      <span className={`text-s px-2 py-1 rounded ${breach.severity === 'high'
                         ? 'bg-destructive/20 text-destructive'
                         : breach.severity === 'medium'
                           ? 'bg-accent/20 text-accent'
@@ -339,7 +351,7 @@ export function ResultsDashboard({
                         {breach.severity}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground mb-2">{breach.breach_date}</p>
+                    <p className="text-s text-muted-foreground mb-2">{breach.breach_date}</p>
                     <div className="flex flex-wrap gap-1">
                       {breach.breached_data.map((data, i) => (
                         <span key={i} className="text-xs bg-card/50 border border-primary/10 px-2 py-1 rounded">
@@ -349,6 +361,15 @@ export function ResultsDashboard({
                     </div>
                   </div>
                 ))}
+
+                {sortedBreaches.length > 5 && (
+                  <button
+                    className="w-full mt-6 py-3 font-bold font-mono text-xs uppercase tracking-widest border-2 border-destructive bg-background text-destructive shadow-[4px_4px_0px_0px_var(--destructive)] hover:bg-destructive hover:text-black hover:translate-x-[-2px] hover:-translate-y-1 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                    onClick={() => setShowAllBreaches(!showAllBreaches)}
+                  >
+                    {showAllBreaches ? 'Show Less' : `Show All ${sortedBreaches.length} Breaches`}
+                  </button>
+                )}
               </div>
             </Card>
           </motion.div>
@@ -383,12 +404,12 @@ export function ResultsDashboard({
 
         {/* Actions */}
         <motion.div variants={itemVariants} className="flex gap-4 justify-center">
-          <Button
+          <button
             onClick={onReset}
-            className="neo-btn-primary px-8 py-6 text-base"
+            className="neo-btn-primary px-8 py-4 text-base shadow-[4px_4px_0px_0px_white] hover:shadow-[2px_2px_0px_0px_white]"
           >
             New Scan
-          </Button>
+          </button>
         </motion.div>
 
       </div>

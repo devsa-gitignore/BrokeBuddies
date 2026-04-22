@@ -21,12 +21,9 @@ SITES_TO_CHECK = {
         "not_found_status": 404,
     },
     "Instagram": {
-        "url": "https://www.instagram.com/{}/",
+        "url": "https://www.instagram.com/api/v1/users/web_profile_info/?username={}",
         "profile_url": "https://www.instagram.com/{}/",
-        "method": "body",
-        "found_status": 200,
-        "not_found_text": "Sorry, this page isn't available",
-        "found_text": "Instagram photos and videos",
+        "method": "instagram_api",
     },
     "Spotify": {
         "url": "https://open.spotify.com/user/{}",
@@ -124,6 +121,16 @@ async def check_site(
                     data = await resp.json(content_type=None)
                     matched = data.get("data", {}).get("matchedUser")
                     result["found"] = matched is not None
+            return result
+
+        if method == "instagram_api":
+            ig_headers = {"X-IG-App-ID": "936619743392459"}
+            async with session.get(
+                target_url,
+                headers=ig_headers,
+                timeout=aiohttp.ClientTimeout(total=8),
+            ) as resp:
+                result["found"] = (resp.status == 200)
             return result
 
         async with session.get(

@@ -279,7 +279,7 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
       ...node,
       x: node.position.x,
       y: node.position.y,
-    }))
+    }) as D3Node)
 
     // Build an O(1) lookup map
     const nodeMap = new Map<string, D3Node>(d3Nodes.map((n) => [n.id, n]))
@@ -343,7 +343,16 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
       if (simulationRef.current) simulationRef.current.stop()
       if (rafId !== null) cancelAnimationFrame(rafId)
     }
-  }, [structureKey, edges]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [structureKey, edges, rfInstance]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Step 3: Automatically frame the graph once the initial explosion settles ──
+  useEffect(() => {
+    if (!rfInstance || nodes.length === 0) return
+    const timer = setTimeout(() => {
+      rfInstance.fitView({ padding: 0.2, duration: 1200 })
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [rfInstance, structureKey, nodes.length])
 
   const onNodeDragStart = useCallback(() => {
     if (simulationRef.current) simulationRef.current.alphaTarget(0.3).restart()
@@ -367,14 +376,14 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
   }, [])
 
   return (
-    <div className="w-full h-150 bg-[#050505] rounded-3xl border border-primary/5 shadow-2xl overflow-hidden relative group">
+    <div className="w-full h-150 bg-[#050505] rounded-3xl border-4 border-primary shadow-[8px_8px_0px_0px_var(--primary)] overflow-hidden relative group mt-8">
       {/* Interactive Title Overlay */}
       <div className="absolute top-6 left-6 z-10 flex flex-col gap-1 pointer-events-none select-none">
-        <h3 className="text-xxl font-mono font-bold text-foreground flex items-center gap-2">
+        <h3 className="text-2xl font-mono font-bold text-foreground flex items-center gap-2">
           <Terminal className="w-4 h-4 text-primary" />
           ACCOUNT EXPOSURE TREE
         </h3>
-        <p className="text-[13px] font-mono text-muted-foreground uppercase tracking-widest opacity-60">
+        <p className="text-xl font-mono text-muted-foreground tracking-widest opacity-60">
           Your account, the associated profile and the breaches it has been exposed to
         </p>
       </div>
@@ -397,23 +406,20 @@ export function GraphVisualization({ email, profiles, breaches, secrets }: Graph
         maxZoom={2}
       >
         <Background color="#111" variant={BackgroundVariant.Dots} gap={30} size={1} className="opacity-40" />
-        <Controls className="bg-black/50! backdrop-blur-md! border-white/5! rounded-lg! overflow-hidden! translate-x-2" />
+        <Controls className="bg-black/50! backdrop-blur-md! border-white/5! rounded-lg! overflow-hidden! translate-x-2 -translate-y-20" />
       </ReactFlow>
 
       {/* HUD Overlay */}
       <div className="absolute inset-x-0 bottom-0 p-6 pointer-events-none flex justify-between items-end bg-linear-to-t from-black/80 to-transparent">
         <div className="flex gap-4">
+
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] font-mono text-primary font-bold">PHYSICS</span>
-            <span className="text-xs font-mono text-foreground tracking-tighter">REACTIVE D3 SIMULATION</span>
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] font-mono text-muted-foreground font-bold">TOPOLOGY</span>
-            <span className="text-xs font-mono text-foreground font-bold">{nodes.length} NODES</span>
+            <span className="text-md font-mono text-muted-foreground font-bold">TOPOLOGY</span>
+            <span className="text-md font-mono text-foreground font-bold">{nodes.length} NODES</span>
           </div>
         </div>
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-          <span className="text-[9px] font-mono text-muted-foreground tracking-widest">DRAG NODES TO DISTURB EQUILIBRIUM</span>
+          <span className="text-s font-mono text-muted-foreground tracking-widest">DRAG NODES TO DISTURB EQUILIBRIUM</span>
         </div>
       </div>
     </div>

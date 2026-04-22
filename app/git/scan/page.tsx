@@ -150,7 +150,7 @@ export default function GitScanPage() {
                 />
               </div>
               {error && <p className="text-xs text-destructive mt-2">{error}</p>}
-              <button onClick={startScan} disabled={isValidating} className="mt-4 neo-btn-chart-4 w-full flex items-center justify-center gap-2 py-4 text-base disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_var(--chart-4)]">
+              <button onClick={startScan} disabled={isValidating} className="mt-4 neo-btn-chart-4 w-full flex items-center justify-center gap-2 py-4 text-base disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_white] shadow-[4px_4px_0px_0px_white] hover:shadow-[2px_2px_0px_0px_white]">
                 {isValidating ? (
                   <><div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" /> Verifying repo…</>
                 ) : (

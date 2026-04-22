@@ -138,74 +138,74 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 10 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            className="w-full"
           >
             {/* AI Output */}
-            <Card className="neo-box-primary p-8 flex flex-col justify-between min-h-[300px]">
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Brain className="text-primary" size={24} />
+            <motion.div className="flex flex-col md:flex-row gap-6 w-full">
+              <Card className="neo-box-primary p-8 flex flex-col justify-between min-h-[300px] w-full md:w-[75%]">
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Brain className="text-primary" size={24} />
+                    </div>
+                    <h3 className="text-xl font-bold font-mono tracking-tight">Intelligence Audit</h3>
                   </div>
-                  <h3 className="text-xl font-bold font-mono tracking-tight">Intelligence Audit</h3>
+
+                  {isAnalyzing ? (
+                    <div className="space-y-4">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="h-6 bg-primary/5 animate-pulse rounded overflow-hidden relative">
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent"
+                            animate={{ x: ['-100%', '100%'] }}
+                            transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
+                          />
+                        </div>
+                      ))}
+                      <p className="text-xs text-muted-foreground italic">Consulting predictive threat models...</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 text-sm text-foreground/80 leading-relaxed font-mono">
+                      {aiAnalysis.split('\n').filter(l => l.trim()).map((line, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -5 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.2 }}
+                          className="flex gap-3"
+                        >
+                          <span className="text-primary font-bold">{i + 1}.</span>
+                          <p>{line.replace(/^\d+\.\s*/, '')}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {isAnalyzing ? (
-                  <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="h-6 bg-primary/5 animate-pulse rounded overflow-hidden relative">
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent"
-                          animate={{ x: ['-100%', '100%'] }}
-                          transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-                        />
-                      </div>
-                    ))}
-                    <p className="text-xs text-muted-foreground italic">Consulting predictive threat models...</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4 text-sm text-foreground/80 leading-relaxed font-mono">
-                    {aiAnalysis.split('\n').filter(l => l.trim()).map((line, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -5 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.2 }}
-                        className="flex gap-3"
-                      >
-                        <span className="text-primary font-bold">{i + 1}.</span>
-                        <p>{line.replace(/^\d+\.\s*/, '')}</p>
-                      </motion.div>
-                    ))}
+                {!isAnalyzing && (
+                  <div className="mt-8 pt-4 border-t border-primary/10 text-xs text-muted-foreground uppercase tracking-tighter">
+                    Caution: AI predictions are probabilistic. These scenarios represent the most efficient path an attacker could take based on your current exposure score.
                   </div>
                 )}
-              </div>
+              </Card>
 
-              {!isAnalyzing && (
-                <div className="mt-8 pt-4 border-t border-primary/10 text-[10px] text-muted-foreground uppercase tracking-tighter">
-                  Caution: AI predictions are probabilistic. These scenarios represent the most efficient path an attacker could take based on your current exposure score.
+              {/* Visualizer Placeholder */}
+              <div className="hidden md:flex items-center justify-center relative w-full md:w-[25%]">
+                <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] animate-pulse" />
+                <div className="relative z-10 w-80 h-80 flex items-center justify-center">
+                  <Lottie
+                    lottieRef={lottieRef}
+                    animationData={webprotect as any}
+                    loop={true}
+                    className="w-full h-full"
+                    onDOMLoaded={() => {
+                      if (lottieRef.current) {
+                        lottieRef.current.setSpeed(0.5);
+                      }
+                    }} />
                 </div>
-              )}
-            </Card>
-
-            {/* Visualizer Placeholder */}
-            <div className="hidden md:flex items-center justify-center relative">
-              <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] animate-pulse" />
-              <div className="relative z-10 w-80 h-80 flex items-center justify-center">
-                <Lottie
-                  lottieRef={lottieRef}
-                  animationData={webprotect as any}
-                  loop={true}
-                  className="w-full h-full"
-                  onDOMLoaded={() => {
-                    if (lottieRef.current) {
-                      lottieRef.current.setSpeed(0.5);
-                    }
-                  }}
-                />
               </div>
-            </div>
-
+            </motion.div>
           </motion.div>
         ) : (
           <motion.div
@@ -323,6 +323,6 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </div >
   )
 }
