@@ -127,7 +127,7 @@ export default function PersonalScanPage() {
 
     try {
       addLog('Connecting to backend…', 'log')
-      const response = await fetch('http://localhost:8000/scan', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/scan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, username, repo_url: '' }),

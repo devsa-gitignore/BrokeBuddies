@@ -81,7 +81,7 @@ export default function GitScanPage() {
 
     try {
       addLog('Connecting to backend...')
-      const response = await fetch('http://localhost:8000/scan', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/scan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: 'git@scan.local', username: 'git-scanner', repo_url: repoUrl }),

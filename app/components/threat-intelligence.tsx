@@ -39,7 +39,7 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
   const fetchAiAnalysis = async () => {
     setIsAnalyzing(true)
     try {
-      const response = await fetch('http://localhost:8000/analyze-threats', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/analyze-threats`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(scanData),
@@ -60,7 +60,7 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
       return
     }
     try {
-      const response = await fetch('http://localhost:8000/mutate-password', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/mutate-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: val }),
@@ -76,7 +76,7 @@ export function ThreatIntelligence({ scanData }: ThreatIntelligenceProps) {
     if (!password || mutations.length === 0) return
     setIsAiAuditing(true)
     try {
-      const response = await fetch('http://localhost:8000/analyze-password-risk', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/analyze-password-risk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password, mutations }),

@@ -38,7 +38,7 @@ export default function DomainScanPage() {
     setProgress(5)
 
     try {
-      const response = await fetch('http://localhost:8000/scan-domain', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/scan-domain`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ domain }),

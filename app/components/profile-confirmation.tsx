@@ -94,7 +94,7 @@ export function ProfileConfirmation({
           return { url, ok: false, reason: 'Already in list' }
         }
         try {
-          const res = await fetch('http://localhost:8000/verify-profile-url', {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/verify-profile-url`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url }),
