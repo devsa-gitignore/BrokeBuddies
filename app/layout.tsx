@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Press_Start_2P } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Navbar } from './components/navbar'
+import TargetCursor from './components/animations/TargetCursor'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
@@ -31,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark bg-background ${_geist.variable} ${_geistMono.variable} ${_pixel.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased bg-background text-foreground">
+        <TargetCursor targetSelector="a, button, input, textarea, select, .cursor-target, .neo-box, .neo-btn" />
         <Navbar />
         <div className="pt-14">{children}</div>
         {process.env.NODE_ENV === 'production' && <Analytics />}

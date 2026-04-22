@@ -259,7 +259,7 @@ export default function PersonalScanPage() {
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Email */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                  <label className="text-s font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                     <Mail className="w-3 h-3" /> Email Address
                   </label>
                   <input
@@ -267,9 +267,8 @@ export default function PersonalScanPage() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    className={`w-full bg-background border-2 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${
-                      errors.email ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--primary)]'
-                    }`}
+                    className={`w-full bg-background border-2 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none transition-all ${errors.email ? 'border-destructive focus:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--primary)]'
+                      }`}
                   />
                   {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
                 </div>
@@ -277,15 +276,14 @@ export default function PersonalScanPage() {
                 {/* Usernames tag input */}
                 <div className="space-y-1.5">
                   <div className="flex items-baseline justify-between">
-                    <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                    <label className="text-s font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                       <AtSign className="w-3 h-3" /> Usernames
                     </label>
-                    <span className="text-[10px] text-muted-foreground/50">Enter or Tab to add</span>
+                    <span className="text-xs text-muted-foreground/50">Enter or Tab to add</span>
                   </div>
                   <div
-                    className={`min-h-[44px] flex flex-wrap gap-2 items-center px-3 py-2 border-2 bg-background cursor-text transition-all ${
-                      errors.username ? 'border-destructive focus-within:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus-within:border-primary focus-within:shadow-[4px_4px_0px_0px_var(--primary)]'
-                    }`}
+                    className={`min-h-[44px] flex flex-wrap gap-2 items-center px-3 py-2 border-2 bg-background cursor-text transition-all ${errors.username ? 'border-destructive focus-within:shadow-[4px_4px_0px_0px_var(--destructive)]' : 'border-foreground focus-within:border-primary focus-within:shadow-[4px_4px_0px_0px_var(--primary)]'
+                      }`}
                     onClick={() => inputRef.current?.focus()}
                   >
                     <AnimatePresence>
@@ -296,7 +294,7 @@ export default function PersonalScanPage() {
                           initial="hidden"
                           animate="visible"
                           exit="exit"
-                          className="flex items-center gap-1 bg-primary/15 border border-primary/30 text-primary text-xs font-mono px-2 py-1 rounded-full"
+                          className="flex items-center gap-1 bg-primary/15 border border-primary/30 text-primary text-s font-mono px-2 py-1 rounded-full"
                         >
                           <span className="text-primary/60">@</span>{u}
                           <button type="button" onClick={e => { e.stopPropagation(); removeUsername(i) }}
@@ -314,21 +312,21 @@ export default function PersonalScanPage() {
                       onKeyDown={handleKeyDown}
                       onBlur={() => { if (usernameInput.trim()) addUsername(usernameInput) }}
                       placeholder={usernames.length === 0 ? 'your_handle, @alias…' : ''}
-                      className="flex-1 min-w-[120px] bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground/40"
+                      className="flex-1 min-w-[120px] bg-transparent outline-none text-m text-foreground placeholder:text-muted-foreground/40"
                     />
                   </div>
-                  {errors.username && <p className="text-xs text-destructive">{errors.username}</p>}
+                  {errors.username && <p className="text-s text-destructive">{errors.username}</p>}
                 </div>
 
                 <button
                   type="submit"
-                  className="neo-btn-primary w-full flex items-center justify-center gap-2 py-4 mt-2 text-base"
+                  className="neo-btn-primary w-full flex items-center justify-center gap-2 py-4 mt-2 text-base shadow-[4px_4px_0px_0px_white] hover:shadow-[2px_2px_0px_0px_white]"
                 >
                   <Scan className="w-4 h-4" /> Begin Scan
                 </button>
               </form>
 
-              <p className="text-[11px] text-muted-foreground/50 text-center leading-relaxed pt-2 border-t border-white/5">
+              <p className="text-s text-muted-foreground/50 text-center leading-relaxed pt-2 border-t border-white/5">
                 We scan breach databases, 300+ social platforms, and public records. No data is stored.
               </p>
             </motion.div>
